@@ -127,7 +127,7 @@ export default function Home() {
             <span className="text-blue-500 font-semibold">um clique</span>.
           </p>
           <div className="mt-8">
-            <Button size="lg" className="text-lg" onClick={scrollToMainCta}>
+            <Button size="lg" className="text-lg h-14 px-10 font-bold bg-orange-500 hover:bg-orange-600 text-white" onClick={scrollToMainCta}>
               Quero provar essa variedade
             </Button>
           </div>
