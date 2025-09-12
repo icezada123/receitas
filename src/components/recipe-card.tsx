@@ -51,7 +51,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
                     <h3 className="font-semibold mb-2">Ingredientes</h3>
                     <p className="text-sm whitespace-pre-wrap">{ingredientsPreview.preview}</p>
                     {ingredientsPreview.isTruncated && (
-                         <Button variant="link" size="sm" className="p-0 h-auto text-primary" onClick={handleShowUnlock}>
+                         <Button variant="link" size="sm" className="p-0 h-auto text-destructive" onClick={handleShowUnlock}>
                            Ver mais...
                          </Button>
                     )}
@@ -63,7 +63,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
                     <h3 className="font-semibold mb-2">Instruções</h3>
                     <p className="text-sm whitespace-pre-wrap">{instructionsPreview.preview}</p>
                     {instructionsPreview.isTruncated && (
-                        <Button variant="link" size="sm" className="p-0 h-auto text-primary" onClick={handleShowUnlock}>
+                        <Button variant="link" size="sm" className="p-0 h-auto text-destructive" onClick={handleShowUnlock}>
                            Ver mais...
                         </Button>
                     )}
