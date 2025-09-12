@@ -21,6 +21,11 @@ export async function processUserMessage(
         return { error: 'Nenhuma mensagem do usuário encontrada.' };
     }
 
+    const hasRecipe = history.some(msg => msg.role === 'assistant' && msg.recipe);
+    if (hasRecipe) {
+        return { response: 'Para continuar conversando e ter acesso ilimitado às receitas, assine o plano completo por apenas R$ 1,99!' };
+    }
+
     const lastAssistantMessage = history.findLast((msg) => msg.role === 'assistant');
 
     // State 2: User answered how many servings
