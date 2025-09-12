@@ -77,7 +77,7 @@ const faqItems = [
     },
     {
         question: "E se eu não gostar ou não me adaptar?",
-        answer: "Risco zero. Você tem 7 dias de garantia incondicional. Se por qualquer motivo não gostar, é só pedir o reembolso e devolvemos 100% do seu dinheiro, sem perguntas."
+        answer: "Sem problema! Você tem garantia de [X dias]: se não amar a experiência, devolvemos 100% do seu dinheiro, sem perguntas."
     },
     {
         question: "Quanto custa manter o acesso?",
