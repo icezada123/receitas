@@ -43,6 +43,11 @@ export function ChatInterface() {
         role: 'assistant',
         content: 'Olá! Sou seu chef pessoal de IA. O que você gostaria de cozinhar hoje?',
       },
+      {
+        id: 'initial-2',
+        role: 'assistant',
+        content: 'SEJA ESPECIFICO QUANDO MANDAR ALGUMA RECEITA',
+      }
     ]);
   }, []);
 
