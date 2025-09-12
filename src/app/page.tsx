@@ -77,7 +77,7 @@ const faqItems = [
     },
     {
         question: "E se eu não gostar ou não me adaptar?",
-        answer: "Sem problema! Você tem garantia de [X dias]: se não amar a experiência, devolvemos 100% do seu dinheiro, sem perguntas."
+        answer: "Sem problema! Você tem garantia de 7 dias: se não amar a experiência, devolvemos 100% do seu dinheiro, sem perguntas."
     },
     {
         question: "Quanto custa manter o acesso?",
@@ -334,7 +334,7 @@ export default function Home() {
                     <Lock className="w-5 h-5 text-gray-500"/>
                     Garantia sem risco
                 </h3>
-                <p className="mt-2 text-muted-foreground">Experimente por [X dias] sem compromisso. Se não transformar sua rotina, devolvemos 100% do seu dinheiro.</p>
+                <p className="mt-2 text-muted-foreground">Experimente por 7 dias sem compromisso. Se não transformar sua rotina, devolvemos 100% do seu dinheiro.</p>
             </div>
 
             <div className="mt-6 text-center">
