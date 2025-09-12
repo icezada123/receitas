@@ -73,7 +73,7 @@ const faqItems = [
     },
     {
         question: "Vou perder muito tempo aprendendo a usar?",
-        answer: "De jeito nenhum! A interface é tão intuitiva que em menos de 5 minutos você já estará criando suas primeiras receitas. É tudo pensado para ser rápido e prático."
+        answer: "De jeito nenhum. O sistema foi criado para ser 100% intuitivo: basta digitar o que você quer ou os ingredientes que tem, e a IA cria a receita em segundos."
     },
     {
         question: "E se eu não gostar ou não me adaptar?",
