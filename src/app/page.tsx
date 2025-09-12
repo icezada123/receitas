@@ -8,7 +8,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { Check, Quote, Star, X } from 'lucide-react';
+import { Check, Flame, Hand, Quote, Star, X } from 'lucide-react';
 
 const testimonials = [
   {
@@ -29,6 +29,21 @@ const testimonials = [
     quote: 'Salvou minhas noites! Consigo fazer pratos deliciosos e rápidos para a família toda sem estresse. Meus filhos estão adorando a variedade!',
   }
 ];
+
+const benefits = [
+    {
+        title: "+8.000 receitas na sua mão",
+        description: "Nunca mais repita prato. Cada refeição vira uma experiência nova, saborosa e prática. Você redescobre o prazer de comer bem todos os dias, sem esforço."
+    },
+    {
+        title: "IA que cria qualquer prato em segundos",
+        description: "Acabou a frustração de ficar em frente à geladeira sem ideia do que cozinhar. Com um clique, você transforma ingredientes simples em pratos incríveis – ganhando tempo e tranquilidade."
+    },
+    {
+        title: "Variedade infinita + praticidade total",
+        description: "Sua família se surpreende a cada refeição, você economiza no delivery e ainda sente que tem controle da sua saúde, da sua rotina e do seu bolso."
+    }
+]
 
 export default function Home() {
   return (
@@ -201,6 +216,33 @@ export default function Home() {
             <Button size="lg" className="text-lg bg-orange-500 hover:bg-orange-600 text-white">
               Quero minha praticidade na cozinha
             </Button>
+          </div>
+        </div>
+      </section>
+      
+      <section className="py-12 sm:py-16 lg:py-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-red-500 flex items-center justify-center gap-2">
+                <Flame className="w-8 h-8 text-orange-500" />
+                Benefícios transformados em Resultados Reais
+            </h2>
+          </div>
+          <div className="max-w-3xl mx-auto space-y-10">
+            {benefits.map((benefit, index) => (
+                <div key={index} className="flex flex-col gap-3">
+                    <h3 className="flex items-center gap-2 text-xl font-bold text-green-600">
+                        <Check className="w-7 h-7 bg-green-600 text-white rounded p-1"/>
+                        {benefit.title}
+                    </h3>
+                    <div className="flex items-start gap-3 pl-2">
+                        <Hand className="w-5 h-5 text-yellow-500 mt-1 shrink-0 -rotate-90"/>
+                        <p className="text-lg text-muted-foreground">
+                            {benefit.description}
+                        </p>
+                    </div>
+                </div>
+            ))}
           </div>
         </div>
       </section>
