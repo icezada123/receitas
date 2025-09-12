@@ -334,7 +334,9 @@ export default function Home() {
                     <Lock className="w-5 h-5 text-gray-500"/>
                     Garantia sem risco
                 </h3>
-                <p className="mt-2 text-muted-foreground">Experimente por 7 dias sem compromisso. Se não transformar sua rotina, devolvemos 100% do seu dinheiro.</p>
+                <p className="mt-2 text-muted-foreground">
+                    Experimente por <span className="text-red-500 font-bold text-lg">7 dias sem compromisso</span>. Se não transformar sua rotina, devolvemos <span className="text-red-500 font-bold text-lg">100% do seu dinheiro</span>.
+                </p>
             </div>
 
             <div className="mt-6 text-center">
