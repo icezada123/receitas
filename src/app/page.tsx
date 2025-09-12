@@ -1,3 +1,9 @@
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 import { ChatInterface } from '@/components/chat-interface';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -51,6 +57,37 @@ const finalBenefits = [
     "Variedade infinita e praticidade total todos os dias",
     "Controle da sua rotina alimentar sem esforço e sem monotonia",
 ]
+
+const faqItems = [
+    {
+        question: "Preciso saber cozinhar para usar a plataforma?",
+        answer: "Não! A plataforma foi desenhada para todos, desde iniciantes que nunca cozinharam até chefs experientes. As receitas vêm com um passo a passo tão simples que é impossível errar."
+    },
+    {
+        question: "Realmente são mais de 8.000 receitas?",
+        answer: "Sim! E o número não para de crescer. Você terá acesso a um universo de pratos, dos mais simples aos mais sofisticados, garantindo que nunca falte inspiração na sua cozinha."
+    },
+    {
+        question: "A IA funciona no celular?",
+        answer: "Com certeza! Nossa plataforma é 100% responsiva e funciona perfeitamente em qualquer dispositivo: celular, tablet ou computador. Cozinhe de onde estiver."
+    },
+    {
+        question: "Vou perder muito tempo aprendendo a usar?",
+        answer: "De jeito nenhum! A interface é tão intuitiva que em menos de 5 minutos você já estará criando suas primeiras receitas. É tudo pensado para ser rápido e prático."
+    },
+    {
+        question: "E se eu não gostar ou não me adaptar?",
+        answer: "Risco zero. Você tem 7 dias de garantia incondicional. Se por qualquer motivo não gostar, é só pedir o reembolso e devolvemos 100% do seu dinheiro, sem perguntas."
+    },
+    {
+        question: "Quanto custa manter o acesso?",
+        answer: "O acesso à plataforma é garantido com um pagamento único. Sem mensalidades ou taxas escondidas. Você paga uma vez e aproveita para sempre."
+    },
+    {
+        question: "Posso compartilhar com minha família?",
+        answer: "Sim! O acesso pode ser compartilhado com todos na sua casa. Queremos que a transformação na cozinha seja um benefício para toda a família."
+    }
+];
 
 export default function Home() {
   return (
@@ -309,6 +346,33 @@ export default function Home() {
             </div>
 
           </div>
+        </div>
+      </section>
+
+      <section className="py-12 sm:py-16 lg:py-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-red-500">
+              Perguntas Frequentes
+            </h2>
+          </div>
+          <div className="max-w-3xl mx-auto">
+            <Accordion type="single" collapsible className="w-full">
+              {faqItems.map((item, index) => (
+                <AccordionItem value={`item-${index}`} key={index}>
+                  <AccordionTrigger className="text-lg font-semibold text-left hover:no-underline">
+                    {item.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-lg text-muted-foreground">
+                    {item.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+           <p className="text-center mt-8 text-muted-foreground">
+              Ainda tem dúvidas? <a href="#" className="text-green-600 font-semibold underline">Clique aqui e fale conosco agora mesmo.</a>
+            </p>
         </div>
       </section>
 
