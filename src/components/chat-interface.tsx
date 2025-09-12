@@ -89,7 +89,7 @@ export function ChatInterface() {
           assistantMessage = {
               id: crypto.randomUUID(),
               role: 'assistant',
-              content: `Aqui está sua receita para ${recipe.recipeName}.`,
+              content: '', // Content is handled by the RecipeCard
               recipe: recipe,
             };
       } else if (response) {
@@ -132,9 +132,10 @@ export function ChatInterface() {
                   className={cn(
                     'p-3 rounded-lg max-w-sm md:max-w-md lg:max-w-lg',
                     {
-                      'bg-primary/20': message.role === 'user',
-                      'bg-muted': message.role === 'assistant',
+                      'bg-primary/20': message.role === 'user' && message.content,
+                      'bg-muted': message.role === 'assistant' && message.content,
                       'bg-destructive/20 text-destructive-foreground': message.isError,
+                      'p-0': !!message.recipe, // No padding if it's a recipe card
                     }
                   )}
                 >
