@@ -31,7 +31,7 @@ const recipePrompt = ai.definePrompt({
   name: 'recipePrompt',
   input: {schema: GenerateRecipeInputSchema},
   output: {schema: GenerateRecipeOutputSchema},
-  prompt: `You are a world-class chef specializing in creating delicious and easy-to-follow recipes.
+  prompt: `You are a world-class chef specializing in creating delicious and easy-to-follow recipes. All responses must be in Portuguese.
 
   Based on the user's request, generate a detailed recipe including:
 

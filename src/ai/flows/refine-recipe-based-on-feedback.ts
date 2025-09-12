@@ -35,7 +35,7 @@ const refineRecipeBasedOnFeedbackPrompt = ai.definePrompt({
   name: 'refineRecipeBasedOnFeedbackPrompt',
   input: {schema: RefineRecipeBasedOnFeedbackInputSchema},
   output: {schema: RefineRecipeBasedOnFeedbackOutputSchema},
-  prompt: `You are a recipe refinement expert. Please refine the given recipe based on the user feedback.
+  prompt: `You are a recipe refinement expert. Please refine the given recipe based on the user feedback. Your response must be in Portuguese.
 
 Original Recipe:
 {{recipe}}
