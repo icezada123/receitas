@@ -81,7 +81,7 @@ const faqItems = [
     },
     {
         question: "Quanto custa manter o acesso?",
-        answer: "O acesso à plataforma é garantido com um pagamento único. Sem mensalidades ou taxas escondidas. Você paga uma vez e aproveita para sempre."
+        answer: "Hoje você garante acesso completo por apenas R$ 1,99. Um investimento muito menor que gastar em delivery toda semana."
     },
     {
         question: "Posso compartilhar com minha família?",
