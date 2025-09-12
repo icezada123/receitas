@@ -61,7 +61,7 @@ const finalBenefits = [
 const faqItems = [
     {
         question: "Preciso saber cozinhar para usar a plataforma?",
-        answer: "Não! A plataforma foi desenhada para todos, desde iniciantes que nunca cozinharam até chefs experientes. As receitas vêm com um passo a passo tão simples que é impossível errar."
+        answer: "Não! Todas as receitas são pensadas para qualquer nível, desde iniciantes até quem já gosta de cozinhar. A IA ainda adapta os pratos aos ingredientes que você já tem em casa."
     },
     {
         question: "Realmente são mais de 8.000 receitas?",
