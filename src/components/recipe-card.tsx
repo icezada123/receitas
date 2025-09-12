@@ -1,7 +1,7 @@
 import type { GenerateRecipeOutput } from '@/ai/flows/generate-recipe-from-prompt';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card';
 import { Separator } from './ui/separator';
-import { Utensils } from 'lucide-react';
+import { Utensils, Users } from 'lucide-react';
 
 interface RecipeCardProps {
   recipe: GenerateRecipeOutput;
@@ -18,7 +18,14 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
   return (
     <div className="w-full text-foreground">
         <h2 className="text-xl font-bold font-headline mb-2">{recipe.recipeName}</h2>
-      
+        
+        {recipe.servings > 0 && (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+            <Users className="w-4 h-4" />
+            <span>Serve {recipe.servings} {recipe.servings > 1 ? 'pessoas' : 'pessoa'}</span>
+          </div>
+        )}
+
         <div className="space-y-4">
             <div>
                 <h3 className="font-semibold mb-2">Ingredientes</h3>

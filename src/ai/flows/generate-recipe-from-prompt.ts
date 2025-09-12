@@ -17,6 +17,7 @@ export type GenerateRecipeInput = z.infer<typeof GenerateRecipeInputSchema>;
 
 const GenerateRecipeOutputSchema = z.object({
   recipeName: z.string().describe('The name of the generated recipe.'),
+  servings: z.number().describe('The number of people the recipe serves.'),
   ingredients: z.string().describe('A list of ingredients for the recipe.'),
   instructions: z.string().describe('Step-by-step instructions for preparing the recipe.'),
   servingSuggestion: z.string().optional().describe('Suggestion on how to serve the recipe'),
@@ -36,6 +37,7 @@ const recipePrompt = ai.definePrompt({
   Based on the user's request, generate a detailed recipe including:
 
   - A creative and appealing recipe name.
+  - The number of people the recipe serves.
   - A comprehensive list of ingredients with quantities.
   - Clear, step-by-step instructions for preparing the dish.
   - Serving suggestions and tips for optimal enjoyment.

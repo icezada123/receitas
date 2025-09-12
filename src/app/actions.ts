@@ -29,7 +29,7 @@ export async function processUserMessage(
     const prompt = constructPrompt(history);
     const recipe = await generateRecipe({ prompt });
 
-    if (!recipe.recipeName || !recipe.ingredients || !recipe.instructions) {
+    if (!recipe.recipeName || !recipe.ingredients || !recipe.instructions || !recipe.servings) {
       throw new Error('A resposta da IA não continha uma receita válida.');
     }
 
