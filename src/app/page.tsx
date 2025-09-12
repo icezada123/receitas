@@ -6,6 +6,17 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { ChatInterface } from '@/components/chat-interface';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -17,6 +28,8 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 import { BadgeDollarSign, Check, Flame, Hand, Lock, Quote, Star, ThumbsUp, Zap, X } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 const testimonials = [
   {
@@ -214,13 +227,15 @@ export default function Home() {
         </div>
       </section>
 
-      <main className="w-full max-w-3xl flex-1 flex flex-col mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-8">
+      <main className="w-full flex-1 flex flex-col mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-card/50">
+        <div className="text-center mb-8 max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground">
             Teste nossa IA de graça
           </h2>
         </div>
-        <ChatInterface />
+        <div className="max-w-3xl mx-auto w-full">
+            <ChatInterface />
+        </div>
       </main>
 
       <section className="py-12 sm:py-16 lg:py-20 bg-card/50">
@@ -356,9 +371,39 @@ export default function Home() {
             </div>
 
             <div id="main-cta" className="mt-8 text-center">
-                <Button size="lg" className="text-lg bg-orange-500 hover:bg-orange-600 text-white h-12 px-10">
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button size="lg" className="text-lg bg-orange-500 hover:bg-orange-600 text-white h-12 px-10">
                     Quero meu acesso agora
-                </Button>
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Quase lá!</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Preencha seus dados abaixo para receber o acesso completo à plataforma.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="email" className="text-right">
+                        Email
+                      </Label>
+                      <Input id="email" type="email" placeholder="seu@email.com" className="col-span-3" />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="phone" className="text-right">
+                        Celular
+                      </Label>
+                      <Input id="phone" type="tel" placeholder="(XX) XXXXX-XXXX" className="col-span-3" />
+                    </div>
+                  </div>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction>Receber acesso</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
 
           </div>
