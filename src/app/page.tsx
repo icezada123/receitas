@@ -8,7 +8,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { Check, Flame, Hand, Quote, Star, X } from 'lucide-react';
+import { BadgeDollarSign, Check, Flame, Hand, Lock, Quote, Star, ThumbsUp, Zap, X } from 'lucide-react';
 
 const testimonials = [
   {
@@ -43,6 +43,13 @@ const benefits = [
         title: "Variedade infinita + praticidade total",
         description: "Sua família se surpreende a cada refeição, você economiza no delivery e ainda sente que tem controle da sua saúde, da sua rotina e do seu bolso."
     }
+]
+
+const finalBenefits = [
+    "+8.000 receitas deliciosas e naturais",
+    "Uma IA exclusiva que cria qualquer prato em segundos",
+    "Variedade infinita e praticidade total todos os dias",
+    "Controle da sua rotina alimentar sem esforço e sem monotonia",
 ]
 
 export default function Home() {
@@ -247,6 +254,64 @@ export default function Home() {
         </div>
       </section>
       
+      <section className="py-12 sm:py-16 lg:py-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto border-2 border-green-500 rounded-lg p-8">
+            <div className="text-center">
+                <h2 className="text-3xl md:text-4xl font-bold text-red-500">A sua transformação começa hoje</h2>
+                <p className="mt-4 text-lg text-muted-foreground">
+                    Você pode continuar gastando tempo e dinheiro no delivery, comendo sempre as mesmas coisas e se frustrando na hora de cozinhar...
+                </p>
+                <div className="mt-6 text-lg flex items-center justify-center gap-2 text-muted-foreground">
+                    <ThumbsUp className="w-5 h-5 text-yellow-500" />
+                    <p>Ou pode liberar agora o acesso ao maior acervo de receitas inteligentes do Brasil:</p>
+                </div>
+            </div>
+
+            <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
+                {finalBenefits.map((benefit, index) => (
+                    <div key={index} className="flex items-start gap-3">
+                        <Check className="w-6 h-6 text-green-500 mt-1 shrink-0 bg-green-100 rounded-full p-1" />
+                        <span className="text-lg">{benefit}</span>
+                    </div>
+                ))}
+            </div>
+
+            <div className="mt-10 text-center bg-yellow-100/50 p-6 rounded-lg">
+                <h3 className="flex items-center justify-center gap-2 text-xl font-bold">
+                    <BadgeDollarSign className="w-6 h-6 text-yellow-600"/>
+                    Investimento acessível
+                </h3>
+                <p className="mt-2 text-muted-foreground">Se você fosse contratar um nutricionista ou um personal chef, gastaria milhares de reais.</p>
+                <p className="mt-4 text-2xl text-muted-foreground">De <span className="line-through">R$ 29,90</span> por apenas:</p>
+                <p className="text-6xl font-bold text-green-600">R$ 1,99</p>
+            </div>
+            
+            <div className="mt-8 text-center">
+                <h3 className="flex items-center justify-center gap-2 text-xl font-bold">
+                    <Lock className="w-5 h-5 text-gray-500"/>
+                    Garantia sem risco
+                </h3>
+                <p className="mt-2 text-muted-foreground">Experimente por [X dias] sem compromisso. Se não transformar sua rotina, devolvemos 100% do seu dinheiro.</p>
+            </div>
+
+            <div className="mt-6 text-center">
+                <p className="flex items-center justify-center gap-2 text-orange-500 font-semibold">
+                    <Zap className="w-5 h-5"/>
+                    Oferta limitada: <span className="font-normal text-muted-foreground">Condição especial por tempo limitado.</span>
+                </p>
+            </div>
+
+            <div className="mt-8 text-center">
+                <Button size="lg" className="text-lg bg-orange-500 hover:bg-orange-600 text-white h-12 px-10">
+                    Quero meu acesso agora
+                </Button>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
       <footer className="text-center text-muted-foreground text-sm py-6">
         Crie receitas personalizadas com o poder da IA.
       </footer>
