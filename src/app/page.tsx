@@ -65,7 +65,7 @@ const faqItems = [
     },
     {
         question: "Realmente são mais de 8.000 receitas?",
-        answer: "Sim! E o número não para de crescer. Você terá acesso a um universo de pratos, dos mais simples aos mais sofisticados, garantindo que nunca falte inspiração na sua cozinha."
+        answer: "Sim! E não apenas isso: além das 8.000 opções prontas, a IA pode gerar combinações ilimitadas com base no que você digitar — é literalmente variedade infinita no seu prato."
     },
     {
         question: "A IA funciona no celular?",
