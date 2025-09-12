@@ -1,6 +1,34 @@
 import { ChatInterface } from '@/components/chat-interface';
 import { Button } from '@/components/ui/button';
-import { Check, X } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
+import { Check, Quote, Star, X } from 'lucide-react';
+
+const testimonials = [
+  {
+    name: 'Juliana P.',
+    title: 'estudante universitária',
+    quote:
+      'Achei que seria complicado... mas em segundos a IA me mostrou receitas incríveis com o que eu já tinha na geladeira. Nunca mais sofri pensando no que cozinhar.',
+  },
+  {
+    name: 'Paulo H.',
+    title: 'empresário',
+    quote:
+      'É como ter um chef particular 24h comigo. Praticidade total, comida variada e sem esforço. Recomendo demais!',
+  },
+  {
+    name: 'Maria S.',
+    title: 'mãe e profissional',
+    quote: 'Salvou minhas noites! Consigo fazer pratos deliciosos e rápidos para a família toda sem estresse. Meus filhos estão adorando a variedade!',
+  }
+];
 
 export default function Home() {
   return (
@@ -121,6 +149,62 @@ export default function Home() {
       <main className="w-full max-w-3xl flex-1 flex flex-col mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <ChatInterface />
       </main>
+
+      <section className="py-12 sm:py-16 lg:py-20 bg-card/50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-red-500 mb-12">
+              Histórias reais de quem já transformou a rotina na cozinha
+            </h2>
+          </div>
+          <Carousel
+            opts={{
+              align: 'start',
+              loop: true,
+            }}
+            className="w-full max-w-4xl mx-auto"
+          >
+            <CarouselContent>
+              {testimonials.map((testimonial, index) => (
+                <CarouselItem key={index} className="md:basis-1/2">
+                  <Card className="h-full">
+                    <CardContent className="p-6 flex flex-col justify-between h-full">
+                      <div className="flex-grow">
+                        <div className="flex items-center mb-4">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className="w-5 h-5 text-yellow-400 fill-yellow-400"
+                            />
+                          ))}
+                          <Quote className="w-8 h-8 text-blue-200 ml-auto" />
+                        </div>
+                        <p className="text-muted-foreground mb-4 text-lg leading-relaxed">
+                          &ldquo;{testimonial.quote}&rdquo;
+                        </p>
+                      </div>
+                      <p className="font-semibold text-foreground">
+                        – {testimonial.name},{' '}
+                        <span className="text-green-600 font-normal">
+                          {testimonial.title}
+                        </span>
+                      </p>
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="absolute left-[-50px] top-1/2 -translate-y-1/2" />
+            <CarouselNext className="absolute right-[-50px] top-1/2 -translate-y-1/2" />
+          </Carousel>
+          <div className="mt-12 text-center">
+            <Button size="lg" className="text-lg bg-orange-500 hover:bg-orange-600 text-white">
+              Quero minha praticidade na cozinha
+            </Button>
+          </div>
+        </div>
+      </section>
+      
       <footer className="text-center text-muted-foreground text-sm py-6">
         Crie receitas personalizadas com o poder da IA.
       </footer>
