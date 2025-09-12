@@ -69,7 +69,7 @@ const faqItems = [
     },
     {
         question: "A IA funciona no celular?",
-        answer: "Com certeza! Nossa plataforma é 100% responsiva e funciona perfeitamente em qualquer dispositivo: celular, tablet ou computador. Cozinhe de onde estiver."
+        answer: "Funciona perfeitamente em qualquer dispositivo: celular, tablet ou computador. Assim você pode acessar suas receitas a qualquer momento, até na cozinha com o celular ao lado."
     },
     {
         question: "Vou perder muito tempo aprendendo a usar?",
