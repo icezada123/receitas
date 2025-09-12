@@ -2,34 +2,35 @@ import type { GenerateRecipeOutput } from '@/ai/flows/generate-recipe-from-promp
 import { Separator } from './ui/separator';
 import { Utensils, Users, Lock } from 'lucide-react';
 import { Button } from './ui/button';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { cn } from '@/lib/utils';
 
 interface RecipeCardProps {
   recipe: GenerateRecipeOutput;
 }
 
-const parseList = (text: string) => {
-    return text.split('\n').map(item => item.trim().replace(/^-|^\*|^\d+\.\s*/, '')).filter(Boolean);
+const truncateTextByWords = (text: string, wordLimit: number) => {
+    if (!text) return { preview: '', isTruncated: false };
+    const words = text.split(/\s+/);
+    if (words.length <= wordLimit) {
+        return { preview: text, isTruncated: false };
+    }
+    const preview = words.slice(0, wordLimit).join(' ');
+    return { preview: `${preview}...`, isTruncated: true };
 };
+
 
 export function RecipeCard({ recipe }: RecipeCardProps) {
   const [showUnlock, setShowUnlock] = useState(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-        setShowUnlock(true);
-    }, 30000); // 30 seconds
+  const ingredientsPreview = truncateTextByWords(recipe.ingredients, 15);
+  const instructionsPreview = truncateTextByWords(recipe.instructions, 15);
 
-    return () => clearTimeout(timer);
-  }, [])
-
-
-  const ingredientsList = parseList(recipe.ingredients).slice(0, 4);
-  const instructionsList = parseList(recipe.instructions).slice(0, 3);
+  const handleShowUnlock = () => setShowUnlock(true);
 
   return (
     <div className="w-full text-foreground relative">
-        <div className={showUnlock ? 'blur-sm' : ''}>
+        <div className={cn({ 'blur-sm': showUnlock })}>
             <h2 className="text-xl font-bold font-headline mb-2">{recipe.recipeName}</h2>
             
             {recipe.servings > 0 && (
@@ -42,24 +43,24 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
             <div className="space-y-4">
                 <div>
                     <h3 className="font-semibold mb-2">Ingredientes</h3>
-                    <ul className="list-disc list-inside space-y-1 text-sm">
-                        {ingredientsList.map((ingredient, index) => (
-                            <li key={index}>{ingredient}</li>
-                        ))}
-                         <li>... e mais</li>
-                    </ul>
+                    <p className="text-sm whitespace-pre-wrap">{ingredientsPreview.preview}</p>
+                    {ingredientsPreview.isTruncated && (
+                         <Button variant="link" size="sm" className="p-0 h-auto text-primary" onClick={handleShowUnlock}>
+                           Ver mais...
+                         </Button>
+                    )}
                 </div>
 
                 <Separator />
                 
                 <div>
                     <h3 className="font-semibold mb-2">Instruções</h3>
-                    <ol className="list-decimal list-inside space-y-2 text-sm">
-                        {instructionsList.map((instruction, index) => (
-                            <li key={index}>{instruction}</li>
-                        ))}
-                        <li>... e mais</li>
-                    </ol>
+                    <p className="text-sm whitespace-pre-wrap">{instructionsPreview.preview}</p>
+                    {instructionsPreview.isTruncated && (
+                        <Button variant="link" size="sm" className="p-0 h-auto text-primary" onClick={handleShowUnlock}>
+                           Ver mais...
+                        </Button>
+                    )}
                 </div>
                 
                 {recipe.servingSuggestion && (
