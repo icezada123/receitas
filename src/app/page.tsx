@@ -85,7 +85,7 @@ const faqItems = [
     },
     {
         question: "Posso compartilhar com minha família?",
-        answer: "Sim! O acesso pode ser compartilhado com todos na sua casa. Queremos que a transformação na cozinha seja um benefício para toda a família."
+        answer: "Sim! O acesso é individual, mas nada impede que toda a sua família aproveite as receitas e viva a transformação junto com você."
     }
 ];
 
