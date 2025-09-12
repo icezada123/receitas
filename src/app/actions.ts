@@ -3,41 +3,66 @@
 import { generateRecipe } from '@/ai/flows/generate-recipe-from-prompt';
 import type { Message } from '@/lib/types';
 
-function constructPrompt(history: Message[]): string {
-  const userMessages = history
-    .filter((msg) => msg.role === 'user')
-    .map((msg) => msg.content);
+function extractNumber(text: string): number | null {
+  const numbers = text.match(/\d+/);
+  return numbers ? parseInt(numbers[0], 10) : null;
+}
 
-  const lastAssistantMessage = history.findLast((msg) => msg.role === 'assistant' && msg.recipe);
-
-  if (lastAssistantMessage && lastAssistantMessage.recipe) {
-    const recipeContext = `The user was previously given a recipe for "${lastAssistantMessage.recipe.recipeName}".`;
-    const refinementRequest = `Now, the user has the following request: "${userMessages[userMessages.length - 1]}".`;
-    const instruction = `Please generate a new, complete recipe that incorporates this feedback.`;
-    return `${recipeContext} ${refinementRequest} ${instruction}`;
-  }
-
-  return `The user wants a recipe. Here is the conversation so far, with the user's messages: ${userMessages.join(
-    '; '
-  )}. Based on this, generate a complete recipe. If you don't have enough information, generate a common version of the last requested dish. For example, if they just say "strogonoff", make a classic beef stroganoff recipe.`;
+function constructPrompt(dish: string, servings: number | string): string {
+    return `O usuário quer uma receita para "${dish}" que sirva ${servings} ${servings > 1 ? 'pessoas' : 'pessoa'}. Por favor, gere uma receita completa e detalhada baseada nesta informação.`;
 }
 
 export async function processUserMessage(
   history: Message[]
-): Promise<{ recipe?: any; error?: string }> {
+): Promise<{ recipe?: any; response?: string; error?: string }> {
   try {
-    const prompt = constructPrompt(history);
-    const recipe = await generateRecipe({ prompt });
-
-    if (!recipe.recipeName || !recipe.ingredients || !recipe.instructions || !recipe.servings) {
-      throw new Error('A resposta da IA não continha uma receita válida.');
+    const lastUserMessage = history.findLast((msg) => msg.role === 'user');
+    if (!lastUserMessage) {
+        return { error: 'Nenhuma mensagem do usuário encontrada.' };
     }
 
-    return { recipe };
+    const lastAssistantMessage = history.findLast((msg) => msg.role === 'assistant');
+
+    // State 2: User answered how many servings
+    if (lastAssistantMessage?.content.includes('quantas pessoas')) {
+        const servings = extractNumber(lastUserMessage.content);
+        const dish = history.find(msg => msg.role === 'user' && msg.id !== lastUserMessage.id)?.content;
+
+        if (servings && dish) {
+            const prompt = constructPrompt(dish, servings);
+            const recipe = await generateRecipe({ prompt });
+            if (!recipe.recipeName || !recipe.ingredients || !recipe.instructions || !recipe.servings) {
+                throw new Error('A resposta da IA não continha uma receita válida.');
+            }
+            return { recipe };
+        } else {
+           // If user did not provide a number, ask again.
+           return { response: 'Por favor, me diga para quantas pessoas será a receita.' };
+        }
+    }
+
+    // State 1: Initial user prompt for a recipe
+    const servings = extractNumber(lastUserMessage.content);
+    
+    if (servings) {
+        // Servings info is already in the first message
+        const prompt = constructPrompt(lastUserMessage.content, servings);
+        const recipe = await generateRecipe({ prompt });
+
+        if (!recipe.recipeName || !recipe.ingredients || !recipe.instructions || !recipe.servings) {
+            throw new Error('A resposta da IA não continha uma receita válida.');
+        }
+        return { recipe };
+
+    } else {
+        // Servings info is missing, ask the user.
+        return { response: `Com certeza! Para quantas pessoas essa receita vai servir?` };
+    }
+
   } catch (error) {
     console.error('Error processing user message:', error);
     return {
-      error: 'Desculpe, não consegui gerar uma receita. Por favor, tente novamente.',
+      error: 'Desculpe, não consegui processar sua solicitação. Por favor, tente novamente.',
     };
   }
 }

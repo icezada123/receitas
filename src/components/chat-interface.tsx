@@ -66,7 +66,7 @@ export function ChatInterface() {
     form.reset();
 
     startTransition(async () => {
-      const { recipe, error } = await processUserMessage(newMessages);
+      const { recipe, response, error } = await processUserMessage(newMessages);
 
       if (error) {
         toast({
@@ -84,15 +84,30 @@ export function ChatInterface() {
         return;
       }
       
+      let assistantMessage: Message;
       if (recipe) {
-          const assistantMessage: Message = {
+          assistantMessage = {
               id: crypto.randomUUID(),
               role: 'assistant',
               content: `Aqui está sua receita para ${recipe.recipeName}.`,
               recipe: recipe,
             };
-        setMessages((prev) => [...prev, assistantMessage]);
+      } else if (response) {
+        assistantMessage = {
+            id: crypto.randomUUID(),
+            role: 'assistant',
+            content: response,
+          };
+      } else {
+        // Should not happen, but as a fallback
+        assistantMessage = {
+          id: crypto.randomUUID(),
+          role: 'assistant',
+          content: "Não entendi, pode repetir?",
+          isError: true,
+        }
       }
+      setMessages((prev) => [...prev, assistantMessage]);
     });
   };
 
@@ -155,7 +170,7 @@ export function ChatInterface() {
                   <FormItem className="flex-1">
                     <FormControl>
                       <Input
-                        placeholder="Ex: Quero um strogonoff para 4 pessoas..."
+                        placeholder="Ex: Rabanada para 4 pessoas..."
                         className="text-base"
                         {...field}
                         disabled={isPending}
