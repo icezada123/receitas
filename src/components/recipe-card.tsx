@@ -19,6 +19,12 @@ const truncateTextByWords = (text: string, wordLimit: number) => {
     return { preview: `${preview}...`, isTruncated: true };
 };
 
+const scrollToMainCta = () => {
+    const ctaElement = document.getElementById('main-cta');
+    if (ctaElement) {
+        ctaElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
 
 export function RecipeCard({ recipe }: RecipeCardProps) {
   const [showUnlock, setShowUnlock] = useState(false);
@@ -85,7 +91,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
                 <p className="text-muted-foreground mb-4">
                     Assine agora por apenas <span className="font-bold text-primary">R$ 1,99</span> e tenha acesso a esta e milhares de outras receitas ilimitadas.
                 </p>
-                <Button>Quero acesso ilimitado</Button>
+                <Button onClick={scrollToMainCta}>Quero acesso ilimitado</Button>
             </div>
         )}
     </div>

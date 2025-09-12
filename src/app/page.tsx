@@ -344,7 +344,7 @@ export default function Home() {
                 </p>
             </div>
 
-            <div className="mt-8 text-center">
+            <div id="main-cta" className="mt-8 text-center">
                 <Button size="lg" className="text-lg bg-orange-500 hover:bg-orange-600 text-white h-12 px-10">
                     Quero meu acesso agora
                 </Button>
