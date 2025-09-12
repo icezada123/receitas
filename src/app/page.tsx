@@ -206,6 +206,11 @@ export default function Home() {
       </section>
 
       <main className="w-full max-w-3xl flex-1 flex flex-col mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground">
+            Teste nossa IA de graça
+          </h2>
+        </div>
         <ChatInterface />
       </main>
 
