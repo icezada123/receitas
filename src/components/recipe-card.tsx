@@ -20,7 +20,7 @@ const truncateTextByWords = (text: string, wordLimit: number) => {
 };
 
 const scrollToMainCta = () => {
-    const ctaElement = document.getElementById('main-cta');
+    const ctaElement = document.getElementById('main-cta-section');
     if (ctaElement) {
         ctaElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }

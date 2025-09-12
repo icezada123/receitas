@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Accordion,
   AccordionContent,
@@ -89,6 +91,13 @@ const faqItems = [
     }
 ];
 
+const scrollToMainCta = () => {
+    const ctaElement = document.getElementById('main-cta-section');
+    if (ctaElement) {
+        ctaElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+
 export default function Home() {
   return (
     <div className="flex flex-col min-h-svh bg-background">
@@ -118,7 +127,7 @@ export default function Home() {
             <span className="text-blue-500 font-semibold">um clique</span>.
           </p>
           <div className="mt-8">
-            <Button size="lg" className="text-lg">
+            <Button size="lg" className="text-lg" onClick={scrollToMainCta}>
               Quero provar essa variedade
             </Button>
           </div>
@@ -198,7 +207,7 @@ export default function Home() {
             </div>
           </div>
           <div className="mt-10 text-center">
-            <Button size="lg" className="text-lg bg-orange-500 hover:bg-orange-600 text-white">
+            <Button size="lg" className="text-lg bg-orange-500 hover:bg-orange-600 text-white" onClick={scrollToMainCta}>
               Quero minha praticidade na cozinha
             </Button>
           </div>
@@ -262,7 +271,7 @@ export default function Home() {
             <CarouselNext className="absolute right-[-50px] top-1/2 -translate-y-1/2" />
           </Carousel>
           <div className="mt-12 text-center">
-            <Button size="lg" className="text-lg bg-orange-500 hover:bg-orange-600 text-white">
+            <Button size="lg" className="text-lg bg-orange-500 hover:bg-orange-600 text-white" onClick={scrollToMainCta}>
               Quero minha praticidade na cozinha
             </Button>
           </div>
@@ -296,7 +305,7 @@ export default function Home() {
         </div>
       </section>
       
-      <section className="py-12 sm:py-16 lg:py-20">
+      <section id="main-cta-section" className="py-12 sm:py-16 lg:py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto border-2 border-green-500 rounded-lg p-8">
             <div className="text-center">
