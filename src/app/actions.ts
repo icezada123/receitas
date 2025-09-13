@@ -1,6 +1,8 @@
+
 'use server';
 
 import { generateRecipe } from '@/ai/flows/generate-recipe-from-prompt';
+import { createPayment } from '@/ai/flows/create-payment';
 import type { Message } from '@/lib/types';
 
 function extractNumber(text: string): number | null {
@@ -70,4 +72,14 @@ export async function processUserMessage(
       error: 'Desculpe, não consegui processar sua solicitação. Por favor, tente novamente.',
     };
   }
+}
+
+export async function createPixPayment(data: { email: string, phone: string }): Promise<{ qr_code_base64: string; qr_code: string, transaction_id: string } | null> {
+    try {
+        const paymentResponse = await createPayment(data);
+        return paymentResponse;
+    } catch (error) {
+        console.error("Error creating PIX payment:", error);
+        return null;
+    }
 }

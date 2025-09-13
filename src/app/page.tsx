@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -30,6 +31,9 @@ import {
 import { BadgeDollarSign, Check, Flame, Hand, Lock, Quote, Star, ThumbsUp, Zap, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useState } from 'react';
+import { createPixPayment } from './actions';
+import Image from 'next/image';
 
 const testimonials = [
   {
@@ -112,6 +116,37 @@ const scrollToMainCta = () => {
 }
 
 export default function Home() {
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [paymentData, setPaymentData] = useState<{ qr_code_base64: string, qr_code: string, transaction_id: string } | null>(null);
+    const [isGenerating, setIsGenerating] = useState(false);
+    const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
+    const [formDialogOpen, setFormDialogOpen] = useState(false);
+    
+    const handlePayment = async () => {
+        if (!email || !phone) {
+            alert('Por favor, preencha o email e o celular.');
+            return;
+        }
+        setIsGenerating(true);
+        try {
+            const result = await createPixPayment({ email, phone });
+            if (result && result.qr_code_base64) {
+                setPaymentData(result);
+                setFormDialogOpen(false); // Fecha o dialog de formulário
+                setPaymentDialogOpen(true); // Abre o dialog de pagamento
+            } else {
+                alert('Erro ao gerar o QR Code. Tente novamente.');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Ocorreu um erro. Por favor, tente mais tarde.');
+        } finally {
+            setIsGenerating(false);
+        }
+    };
+
+
   return (
     <div className="flex flex-col min-h-svh bg-background">
       <header className="py-12 sm:py-16 lg:py-20 bg-card/50">
@@ -371,7 +406,7 @@ export default function Home() {
             </div>
 
             <div id="main-cta" className="mt-8 text-center">
-              <AlertDialog>
+              <AlertDialog open={formDialogOpen} onOpenChange={setFormDialogOpen}>
                 <AlertDialogTrigger asChild>
                   <Button size="lg" className="text-lg bg-orange-500 hover:bg-orange-600 text-white h-12 px-10">
                     Quero meu acesso agora
@@ -389,18 +424,20 @@ export default function Home() {
                       <Label htmlFor="email" className="text-right">
                         Email
                       </Label>
-                      <Input id="email" type="email" placeholder="seu@email.com" className="col-span-3" />
+                      <Input id="email" type="email" placeholder="seu@email.com" className="col-span-3" value={email} onChange={(e) => setEmail(e.target.value)} />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
                       <Label htmlFor="phone" className="text-right">
                         Celular
                       </Label>
-                      <Input id="phone" type="tel" placeholder="(XX) XXXXX-XXXX" className="col-span-3" />
+                      <Input id="phone" type="tel" placeholder="(XX) XXXXX-XXXX" className="col-span-3" value={phone} onChange={(e) => setPhone(e.target.value)} />
                     </div>
                   </div>
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                    <AlertDialogAction>Receber acesso</AlertDialogAction>
+                    <AlertDialogAction onClick={handlePayment} disabled={isGenerating}>
+                        {isGenerating ? 'Gerando...' : 'Receber acesso'}
+                    </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
@@ -409,6 +446,33 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {paymentData && (
+        <AlertDialog open={paymentDialogOpen} onOpenChange={setPaymentDialogOpen}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Pague com PIX para liberar seu acesso</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        Escaneie o QR Code abaixo com o app do seu banco para pagar R$ 1,99 e liberar o acesso.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <div className="flex flex-col items-center gap-4 py-4">
+                    <Image src={paymentData.qr_code_base64} alt="PIX QR Code" width={200} height={200} />
+                    <Label htmlFor="pix-code">Ou copie o código PIX:</Label>
+                    <Input id="pix-code" readOnly value={paymentData.qr_code} />
+                    <Button onClick={() => navigator.clipboard.writeText(paymentData.qr_code)}>
+                        Copiar código
+                    </Button>
+                </div>
+                 <p className="text-xs text-center text-muted-foreground px-4">
+                    A PUSHIN PAY atua exclusivamente como processadora de pagamentos e não possui qualquer responsabilidade pela entrega, suporte, conteúdo, qualidade ou cumprimento das obrigações relacionadas aos produtos ou serviços oferecidos pelo vendedor.
+                </p>
+                <AlertDialogFooter>
+                    <AlertDialogCancel onClick={() => setPaymentData(null)}>Fechar</AlertDialogCancel>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+      )}
 
       <section className="py-12 sm:py-16 lg:py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
