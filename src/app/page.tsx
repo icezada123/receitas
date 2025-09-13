@@ -34,6 +34,7 @@ import { Label } from '@/components/ui/label';
 import { useState, useEffect, useRef } from 'react';
 import { createPixPayment, checkPaymentStatus, sendToDiscord } from './actions';
 import Image from 'next/image';
+import { useToast } from '@/hooks/use-toast';
 
 const testimonials = [
   {
@@ -62,6 +63,16 @@ const testimonials = [
     name: 'Fernanda L.',
     title: 'nutricionista',
     quote: 'Indico para meus pacientes como uma ferramenta para explorar novos sabores e manter uma alimentação saudável sem monotonia. A variedade de receitas é impressionante.',
+  },
+  {
+      name: 'Lucas M.',
+      title: 'jovem profissional',
+      quote: 'Depois de um dia cansativo, eu só queria algo rápido e gostoso. A IA me deu a solução em 5 segundos. Virou meu app de cabeceira!',
+  },
+  {
+      name: 'Beatriz C.',
+      title: 'aposentada',
+      quote: 'Redescobri o prazer de cozinhar. As receitas são fáceis de seguir e sempre dão certo. Minha família está adorando as novidades que sirvo nos almoços de domingo.',
   }
 ];
 
@@ -135,6 +146,7 @@ export default function Home() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submissionComplete, setSubmissionComplete] = useState(false);
     const pollingRef = useRef<NodeJS.Timeout | null>(null);
+    const { toast } = useToast();
     
     useEffect(() => {
         if (paymentStatus === 'paid' && pollingRef.current) {
@@ -217,6 +229,49 @@ export default function Home() {
         } finally {
             setIsSubmitting(false);
         }
+    };
+    
+    const copyToClipboard = (text: string) => {
+        // Modern approach
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text)
+                .then(() => toast({ title: 'Código PIX copiado!' }))
+                .catch(err => {
+                    console.error('Falha ao copiar com a API Clipboard: ', err);
+                    fallbackCopyTextToClipboard(text);
+                });
+        } else {
+            // Fallback for older browsers or insecure contexts
+            fallbackCopyTextToClipboard(text);
+        }
+    };
+    
+    const fallbackCopyTextToClipboard = (text: string) => {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        
+        // Make the textarea non-editable and invisible
+        textArea.style.position = 'fixed';
+        textArea.style.top = '-9999px';
+        textArea.style.left = '-9999px';
+
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+            const successful = document.execCommand('copy');
+            if (successful) {
+                toast({ title: 'Código PIX copiado!' });
+            } else {
+                toast({ variant: 'destructive', title: 'Falha ao copiar o código.' });
+            }
+        } catch (err) {
+            console.error('Falha ao copiar com o método fallback: ', err);
+            toast({ variant: 'destructive', title: 'Seu navegador não suporta a cópia automática.' });
+        }
+
+        document.body.removeChild(textArea);
     };
 
 
@@ -488,11 +543,14 @@ export default function Home() {
                  <AlertDialogContent onEscapeKeyDown={resetDialog}>
                   {paymentStatus === 'idle' || paymentStatus === 'pending' ? (
                     <>
-                      {isGenerating ? (
+                      {isGenerating && !paymentData ? (
                         <AlertDialogHeader>
                           <AlertDialogTitle>Gerando seu acesso...</AlertDialogTitle>
+                            <div className="flex justify-center py-4">
+                                <LoaderCircle className="w-8 h-8 animate-spin text-primary"/>
+                            </div>
                           <AlertDialogDescription>
-                            Aguarde um momento.
+                            Aguarde um momento enquanto preparamos seu pagamento.
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                       ) : !paymentData ? (
@@ -518,7 +576,7 @@ export default function Home() {
                             <Label htmlFor="pix-code">Ou copie o código PIX:</Label>
                             <div className='flex w-full max-w-sm items-center space-x-2'>
                                 <Input id="pix-code" readOnly value={paymentData.qr_code} />
-                                <Button onClick={() => navigator.clipboard.writeText(paymentData.qr_code)}>
+                                <Button onClick={() => copyToClipboard(paymentData.qr_code)}>
                                     Copiar
                                 </Button>
                             </div>
