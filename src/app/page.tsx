@@ -258,7 +258,7 @@ export default function Home() {
         </div>
       </section>
 
-      <main className="w-full flex-1 flex flex-col mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-card/50">
+      <main className="w-full flex-1 flex flex-col mx-auto py-16 px-4 sm:px-6 lg:px-8 bg-card/50">
         <div className="text-center mb-8 max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground">
             Teste nossa IA de graça
@@ -444,7 +444,7 @@ export default function Home() {
                                 Copiar código
                             </Button>
                              <p className="text-sm font-semibold text-center mt-2">
-                                Quando efetuar o pagamento você receberá acesso por e-mail automaticamente.
+                                Assim que efetuar o pagamento você poderá colocar o email ou celular para receber nossa IA junto com nossas 8 mil receitas.
                             </p>
                         </div>
                          <p className="text-xs text-center text-muted-foreground px-4">
@@ -496,5 +496,7 @@ export default function Home() {
     </div>
   );
 }
+
+    
 
     
