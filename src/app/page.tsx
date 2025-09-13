@@ -410,9 +410,12 @@ export default function Home() {
                 </AlertDialogTrigger>
                 <AlertDialogContent onEscapeKeyDown={resetDialog} onPointerDownOutside={resetDialog}>
                   {isGenerating ? (
-                     <div className="flex flex-col items-center justify-center p-8">
-                        <p>Gerando seu acesso...</p>
-                    </div>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Aguarde</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Gerando seu acesso...
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
                   ) : !paymentData ? (
                     <>
                       <AlertDialogHeader>
