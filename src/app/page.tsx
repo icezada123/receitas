@@ -116,20 +116,14 @@ const scrollToMainCta = () => {
 }
 
 export default function Home() {
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
     const [paymentData, setPaymentData] = useState<{ qr_code_base64: string, qr_code: string, transaction_id: string } | null>(null);
     const [isGenerating, setIsGenerating] = useState(false);
     const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
     
     const handlePayment = async () => {
-        if (!email || !phone) {
-            alert('Por favor, preencha o email e o celular.');
-            return;
-        }
         setIsGenerating(true);
         try {
-            const result = await createPixPayment({ email, phone });
+            const result = await createPixPayment();
             if (result && result.qr_code_base64) {
                 setPaymentData(result);
             } else {
@@ -146,8 +140,6 @@ export default function Home() {
     const resetDialog = () => {
         setPaymentDialogOpen(false);
         setPaymentData(null);
-        setEmail('');
-        setPhone('');
     }
 
 
@@ -412,38 +404,25 @@ export default function Home() {
             <div id="main-cta" className="mt-8 text-center">
               <AlertDialog open={paymentDialogOpen} onOpenChange={setPaymentDialogOpen}>
                 <AlertDialogTrigger asChild>
-                  <Button size="lg" className="text-lg bg-orange-500 hover:bg-orange-600 text-white h-12 px-10">
+                  <Button size="lg" className="text-lg bg-orange-500 hover:bg-orange-600 text-white h-12 px-10" onClick={handlePayment}>
                     Quero meu acesso agora
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent onEscapeKeyDown={resetDialog} onPointerDownOutside={resetDialog}>
-                  {!paymentData ? (
+                  {isGenerating ? (
+                     <div className="flex flex-col items-center justify-center p-8">
+                        <p>Gerando seu acesso...</p>
+                    </div>
+                  ) : !paymentData ? (
                     <>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>Quase lá!</AlertDialogTitle>
+                        <AlertDialogTitle>Erro</AlertDialogTitle>
                         <AlertDialogDescription>
-                          Preencha seus dados abaixo para receber o acesso completo à plataforma.
+                          Não foi possível gerar o QR Code para pagamento. Por favor, tente novamente.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="email" className="text-right">
-                            Email
-                          </Label>
-                          <Input id="email" type="email" placeholder="seu@email.com" className="col-span-3" value={email} onChange={(e) => setEmail(e.target.value)} />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="phone" className="text-right">
-                            Celular
-                          </Label>
-                          <Input id="phone" type="tel" placeholder="(XX) XXXXX-XXXX" className="col-span-3" value={phone} onChange={(e) => setPhone(e.target.value)} />
-                        </div>
-                      </div>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel onClick={resetDialog}>Cancelar</AlertDialogCancel>
-                        <AlertDialogAction onClick={handlePayment} disabled={isGenerating}>
-                            {isGenerating ? 'Gerando...' : 'Receber acesso'}
-                        </AlertDialogAction>
+                       <AlertDialogFooter>
+                        <AlertDialogCancel onClick={resetDialog}>Fechar</AlertDialogCancel>
                       </AlertDialogFooter>
                     </>
                   ) : (
