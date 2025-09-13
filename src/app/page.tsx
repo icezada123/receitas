@@ -52,6 +52,16 @@ const testimonials = [
     name: 'Maria S.',
     title: 'mãe e profissional',
     quote: 'Salvou minhas noites! Consigo fazer pratos deliciosos e rápidos para a família toda sem estresse. Meus filhos estão adorando a variedade!',
+  },
+  {
+    name: 'Carlos F.',
+    title: 'desenvolvedor de software',
+    quote: 'Uso a IA para planejar minhas refeições da semana. Economizo tempo e dinheiro, e ainda como super bem. É sensacional!',
+  },
+  {
+    name: 'Fernanda L.',
+    title: 'nutricionista',
+    quote: 'Indico para meus pacientes como uma ferramenta para explorar novos sabores e manter uma alimentação saudável sem monotonia. A variedade de receitas é impressionante.',
   }
 ];
 
