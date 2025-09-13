@@ -121,7 +121,6 @@ export default function Home() {
     const [paymentData, setPaymentData] = useState<{ qr_code_base64: string, qr_code: string, transaction_id: string } | null>(null);
     const [isGenerating, setIsGenerating] = useState(false);
     const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
-    const [formDialogOpen, setFormDialogOpen] = useState(false);
     
     const handlePayment = async () => {
         if (!email || !phone) {
@@ -133,8 +132,6 @@ export default function Home() {
             const result = await createPixPayment({ email, phone });
             if (result && result.qr_code_base64) {
                 setPaymentData(result);
-                setFormDialogOpen(false); // Fecha o dialog de formulário
-                setPaymentDialogOpen(true); // Abre o dialog de pagamento
             } else {
                 alert('Erro ao gerar o QR Code. Tente novamente.');
             }
@@ -145,6 +142,13 @@ export default function Home() {
             setIsGenerating(false);
         }
     };
+    
+    const resetDialog = () => {
+        setPaymentDialogOpen(false);
+        setPaymentData(null);
+        setEmail('');
+        setPhone('');
+    }
 
 
   return (
@@ -406,39 +410,66 @@ export default function Home() {
             </div>
 
             <div id="main-cta" className="mt-8 text-center">
-              <AlertDialog open={formDialogOpen} onOpenChange={setFormDialogOpen}>
+              <AlertDialog open={paymentDialogOpen} onOpenChange={setPaymentDialogOpen}>
                 <AlertDialogTrigger asChild>
                   <Button size="lg" className="text-lg bg-orange-500 hover:bg-orange-600 text-white h-12 px-10">
                     Quero meu acesso agora
                   </Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Quase lá!</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Preencha seus dados abaixo para receber o acesso completo à plataforma.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="email" className="text-right">
-                        Email
-                      </Label>
-                      <Input id="email" type="email" placeholder="seu@email.com" className="col-span-3" value={email} onChange={(e) => setEmail(e.target.value)} />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="phone" className="text-right">
-                        Celular
-                      </Label>
-                      <Input id="phone" type="tel" placeholder="(XX) XXXXX-XXXX" className="col-span-3" value={phone} onChange={(e) => setPhone(e.target.value)} />
-                    </div>
-                  </div>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                    <AlertDialogAction onClick={handlePayment} disabled={isGenerating}>
-                        {isGenerating ? 'Gerando...' : 'Receber acesso'}
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
+                <AlertDialogContent onEscapeKeyDown={resetDialog} onPointerDownOutside={resetDialog}>
+                  {!paymentData ? (
+                    <>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Quase lá!</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Preencha seus dados abaixo para receber o acesso completo à plataforma.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="email" className="text-right">
+                            Email
+                          </Label>
+                          <Input id="email" type="email" placeholder="seu@email.com" className="col-span-3" value={email} onChange={(e) => setEmail(e.target.value)} />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="phone" className="text-right">
+                            Celular
+                          </Label>
+                          <Input id="phone" type="tel" placeholder="(XX) XXXXX-XXXX" className="col-span-3" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                        </div>
+                      </div>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel onClick={resetDialog}>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction onClick={handlePayment} disabled={isGenerating}>
+                            {isGenerating ? 'Gerando...' : 'Receber acesso'}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </>
+                  ) : (
+                    <>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Pague com PIX para liberar seu acesso</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                Escaneie o QR Code abaixo com o app do seu banco para pagar R$ 1,99 e liberar o acesso.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <div className="flex flex-col items-center gap-4 py-4">
+                            <Image src={paymentData.qr_code_base64} alt="PIX QR Code" width={200} height={200} />
+                            <Label htmlFor="pix-code">Ou copie o código PIX:</Label>
+                            <Input id="pix-code" readOnly value={paymentData.qr_code} />
+                            <Button onClick={() => navigator.clipboard.writeText(paymentData.qr_code)}>
+                                Copiar código
+                            </Button>
+                        </div>
+                         <p className="text-xs text-center text-muted-foreground px-4">
+                            A PUSHIN PAY atua exclusivamente como processadora de pagamentos e não possui qualquer responsabilidade pela entrega, suporte, conteúdo, qualidade ou cumprimento das obrigações relacionadas aos produtos ou serviços oferecidos pelo vendedor.
+                        </p>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel onClick={resetDialog}>Fechar</AlertDialogCancel>
+                        </AlertDialogFooter>
+                    </>
+                  )}
                 </AlertDialogContent>
               </AlertDialog>
             </div>
@@ -446,33 +477,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {paymentData && (
-        <AlertDialog open={paymentDialogOpen} onOpenChange={setPaymentDialogOpen}>
-            <AlertDialogContent>
-                <AlertDialogHeader>
-                    <AlertDialogTitle>Pague com PIX para liberar seu acesso</AlertDialogTitle>
-                    <AlertDialogDescription>
-                        Escaneie o QR Code abaixo com o app do seu banco para pagar R$ 1,99 e liberar o acesso.
-                    </AlertDialogDescription>
-                </AlertDialogHeader>
-                <div className="flex flex-col items-center gap-4 py-4">
-                    <Image src={paymentData.qr_code_base64} alt="PIX QR Code" width={200} height={200} />
-                    <Label htmlFor="pix-code">Ou copie o código PIX:</Label>
-                    <Input id="pix-code" readOnly value={paymentData.qr_code} />
-                    <Button onClick={() => navigator.clipboard.writeText(paymentData.qr_code)}>
-                        Copiar código
-                    </Button>
-                </div>
-                 <p className="text-xs text-center text-muted-foreground px-4">
-                    A PUSHIN PAY atua exclusivamente como processadora de pagamentos e não possui qualquer responsabilidade pela entrega, suporte, conteúdo, qualidade ou cumprimento das obrigações relacionadas aos produtos ou serviços oferecidos pelo vendedor.
-                </p>
-                <AlertDialogFooter>
-                    <AlertDialogCancel onClick={() => setPaymentData(null)}>Fechar</AlertDialogCancel>
-                </AlertDialogFooter>
-            </AlertDialogContent>
-        </AlertDialog>
-      )}
 
       <section className="py-12 sm:py-16 lg:py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
