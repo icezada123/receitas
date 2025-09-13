@@ -3,6 +3,8 @@
 
 import { generateRecipe } from '@/ai/flows/generate-recipe-from-prompt';
 import { createPayment } from '@/ai/flows/create-payment';
+import { checkPaymentStatus as checkPaymentStatusFlow } from '@/ai/flows/check-payment-status';
+import { sendToDiscord as sendToDiscordFlow } from '@/ai/flows/send-to-discord';
 import type { Message } from '@/lib/types';
 
 function extractNumber(text: string): number | null {
@@ -83,3 +85,23 @@ export async function createPixPayment(): Promise<{ qr_code_base64: string; qr_c
         return null;
     }
 }
+
+export async function checkPaymentStatus(transactionId: string): Promise<string | null> {
+    try {
+        const statusResponse = await checkPaymentStatusFlow(transactionId);
+        return statusResponse?.status ?? null;
+    } catch (error) {
+        console.error("Error checking PIX payment status:", error);
+        return null;
+    }
+}
+
+export async function sendToDiscord(message: string): Promise<void> {
+    try {
+        await sendToDiscordFlow(message);
+    } catch (error) {
+        console.error("Error sending message to Discord:", error);
+        throw new Error('Failed to send message to Discord.');
+    }
+}
+

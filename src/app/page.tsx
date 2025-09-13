@@ -28,11 +28,11 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { BadgeDollarSign, Check, Flame, Hand, Lock, Quote, Star, ThumbsUp, Zap, X } from 'lucide-react';
+import { BadgeDollarSign, Check, Flame, Hand, Lock, Quote, Star, ThumbsUp, Zap, X, LoaderCircle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useState } from 'react';
-import { createPixPayment } from './actions';
+import { useState, useEffect, useRef } from 'react';
+import { createPixPayment, checkPaymentStatus, sendToDiscord } from './actions';
 import Image from 'next/image';
 
 const testimonials = [
@@ -119,28 +119,95 @@ export default function Home() {
     const [paymentData, setPaymentData] = useState<{ qr_code_base64: string, qr_code: string, transaction_id: string } | null>(null);
     const [isGenerating, setIsGenerating] = useState(false);
     const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
+    const [paymentStatus, setPaymentStatus] = useState<'pending' | 'paid' | 'error' | 'idle'>('idle');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submissionComplete, setSubmissionComplete] = useState(false);
+    const pollingRef = useRef<NodeJS.Timeout | null>(null);
     
+    useEffect(() => {
+        if (paymentStatus === 'paid' && pollingRef.current) {
+            clearInterval(pollingRef.current);
+            pollingRef.current = null;
+        }
+
+        if (!paymentDialogOpen) {
+            if (pollingRef.current) {
+                clearInterval(pollingRef.current);
+                pollingRef.current = null;
+            }
+            resetDialog();
+        }
+    }, [paymentStatus, paymentDialogOpen]);
+
     const handlePayment = async () => {
         setIsGenerating(true);
+        setPaymentDialogOpen(true);
+        setPaymentStatus('pending');
         try {
             const result = await createPixPayment();
             if (result && result.qr_code_base64) {
                 setPaymentData(result);
+                startPolling(result.transaction_id);
             } else {
-                alert('Erro ao gerar o QR Code. Tente novamente.');
+                setPaymentStatus('error');
             }
         } catch (error) {
             console.error(error);
-            alert('Ocorreu um erro. Por favor, tente mais tarde.');
+            setPaymentStatus('error');
         } finally {
             setIsGenerating(false);
         }
+    };
+
+    const startPolling = (transactionId: string) => {
+        if (pollingRef.current) {
+            clearInterval(pollingRef.current);
+        }
+        pollingRef.current = setInterval(async () => {
+            const status = await checkPaymentStatus(transactionId);
+            if (status === 'paid') {
+                setPaymentStatus('paid');
+                if (pollingRef.current) {
+                    clearInterval(pollingRef.current);
+                    pollingRef.current = null;
+                }
+            }
+        }, 5000); // Poll every 5 seconds
     };
     
     const resetDialog = () => {
         setPaymentDialogOpen(false);
         setPaymentData(null);
+        setPaymentStatus('idle');
+        setIsGenerating(false);
+        setSubmissionComplete(false);
+        setEmail('');
+        setPhone('');
+        if (pollingRef.current) {
+            clearInterval(pollingRef.current);
+            pollingRef.current = null;
+        }
     }
+    
+    const handleContactSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!email || !phone) {
+            alert('Por favor, preencha seu e-mail e celular.');
+            return;
+        }
+        setIsSubmitting(true);
+        try {
+            await sendToDiscord(`Novo lead! E-mail: ${email}, Celular: ${phone}`);
+            setSubmissionComplete(true);
+        } catch (error) {
+            console.error('Erro ao enviar para o Discord:', error);
+            alert('Ocorreu um erro ao enviar seus dados. Tente novamente.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
 
   return (
@@ -402,58 +469,114 @@ export default function Home() {
             </div>
 
             <div id="main-cta" className="mt-8 text-center">
-              <AlertDialog open={paymentDialogOpen} onOpenChange={setPaymentDialogOpen}>
+               <AlertDialog open={paymentDialogOpen} onOpenChange={setPaymentDialogOpen}>
                 <AlertDialogTrigger asChild>
-                  <Button size="lg" className="text-lg bg-orange-500 hover:bg-orange-600 text-white h-12 px-10" onClick={handlePayment}>
-                    Quero meu acesso agora
+                  <Button size="lg" className="text-lg bg-orange-500 hover:bg-orange-600 text-white h-12 px-10" onClick={handlePayment} disabled={isGenerating}>
+                    {isGenerating ? <LoaderCircle className="animate-spin" /> : "Quero meu acesso agora"}
                   </Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent onEscapeKeyDown={resetDialog} onPointerDownOutside={resetDialog}>
-                  {isGenerating ? (
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Aguarde</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Gerando seu acesso...
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                  ) : !paymentData ? (
+                 <AlertDialogContent onEscapeKeyDown={resetDialog}>
+                  {paymentStatus === 'idle' || paymentStatus === 'pending' ? (
+                    <>
+                      {isGenerating ? (
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Gerando seu acesso...</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Aguarde um momento.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                      ) : !paymentData ? (
+                        <AlertDialogHeader>
+                           <AlertDialogTitle>Aguardando Pagamento</AlertDialogTitle>
+                            <div className="flex justify-center py-4">
+                                <LoaderCircle className="w-8 h-8 animate-spin text-primary"/>
+                            </div>
+                           <AlertDialogDescription className="text-center">
+                                Continue no app do seu banco. Estamos aguardando a confirmação do pagamento.
+                           </AlertDialogDescription>
+                        </AlertDialogHeader>
+                      ) : (
+                        <>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Pague com PIX para liberar seu acesso</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Escaneie o QR Code abaixo com o app do seu banco para pagar R$ 1,99 e liberar o acesso.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <div className="flex flex-col items-center gap-4 py-4">
+                            <Image src={paymentData.qr_code_base64} alt="PIX QR Code" width={200} height={200} />
+                            <Label htmlFor="pix-code">Ou copie o código PIX:</Label>
+                            <div className='flex w-full max-w-sm items-center space-x-2'>
+                                <Input id="pix-code" readOnly value={paymentData.qr_code} />
+                                <Button onClick={() => navigator.clipboard.writeText(paymentData.qr_code)}>
+                                    Copiar
+                                </Button>
+                            </div>
+                            <p className="text-sm font-semibold text-center mt-2">
+                                Assim que efetuar o pagamento você poderá colocar o email ou celular para receber nossa IA junto com nossas 8 mil receitas.
+                            </p>
+                          </div>
+                          <p className="text-xs text-center text-muted-foreground px-4">
+                            A PUSHIN PAY atua exclusivamente como processadora de pagamentos e não possui qualquer responsabilidade pela entrega, suporte, conteúdo, qualidade ou cumprimento das obrigações relacionadas aos produtos ou serviços oferecidos pelo vendedor.
+                          </p>
+                        </>
+                      )}
+                    </>
+                  ) : paymentStatus === 'paid' ? (
+                     submissionComplete ? (
+                        <>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Sucesso!</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    Seu acesso foi enviado. Verifique seu e-mail (e a caixa de spam) para começar a usar.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogAction onClick={resetDialog}>Fechar</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </>
+                     ) : (
+                        <>
+                             <AlertDialogHeader>
+                                <AlertDialogTitle>Pagamento Confirmado!</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    Para onde devemos enviar seu acesso?
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <form onSubmit={handleContactSubmit} className="space-y-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="email">E-mail</Label>
+                                    <Input id="email" type="email" placeholder="seu@email.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="phone">Celular</Label>
+                                    <Input id="phone" type="tel" placeholder="(11) 99999-9999" value={phone} onChange={(e) => setPhone(e.target.value)} required />
+                                </div>
+                                <AlertDialogFooter>
+                                    <Button type="submit" disabled={isSubmitting}>
+                                        {isSubmitting ? <LoaderCircle className="animate-spin" /> : 'Receber acesso'}
+                                    </Button>
+                                </AlertDialogFooter>
+                            </form>
+                        </>
+                     )
+                  ) : ( // paymentStatus === 'error'
                     <>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>Erro</AlertDialogTitle>
+                        <AlertDialogTitle>Erro no Pagamento</AlertDialogTitle>
                         <AlertDialogDescription>
-                          Não foi possível gerar o QR Code para pagamento. Por favor, tente novamente.
+                          Não foi possível processar seu pagamento. Por favor, tente novamente ou entre em contato com o suporte.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
-                       <AlertDialogFooter>
+                      <AlertDialogFooter>
                         <AlertDialogCancel onClick={resetDialog}>Fechar</AlertDialogCancel>
                       </AlertDialogFooter>
                     </>
-                  ) : (
-                    <>
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>Pague com PIX para liberar seu acesso</AlertDialogTitle>
-                            <AlertDialogDescription>
-                                Escaneie o QR Code abaixo com o app do seu banco para pagar R$ 1,99 e liberar o acesso.
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <div className="flex flex-col items-center gap-4 py-4">
-                            <Image src={paymentData.qr_code_base64} alt="PIX QR Code" width={200} height={200} />
-                            <Label htmlFor="pix-code">Ou copie o código PIX:</Label>
-                            <Input id="pix-code" readOnly value={paymentData.qr_code} />
-                            <Button onClick={() => navigator.clipboard.writeText(paymentData.qr_code)}>
-                                Copiar código
-                            </Button>
-                             <p className="text-sm font-semibold text-center mt-2">
-                                Assim que efetuar o pagamento você poderá colocar o email ou celular para receber nossa IA junto com nossas 8 mil receitas.
-                            </p>
-                        </div>
-                         <p className="text-xs text-center text-muted-foreground px-4">
-                            A PUSHIN PAY atua exclusivamente como processadora de pagamentos e não possui qualquer responsabilidade pela entrega, suporte, conteúdo, qualidade ou cumprimento das obrigações relacionadas aos produtos ou serviços oferecidos pelo vendedor.
-                        </p>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel onClick={resetDialog}>Fechar</AlertDialogCancel>
-                        </AlertDialogFooter>
-                    </>
+                  )}
+                  {paymentStatus !== 'paid' && (
+                     <AlertDialogFooter>
+                        <AlertDialogCancel onClick={resetDialog}>Cancelar</AlertDialogCancel>
+                    </AlertDialogFooter>
                   )}
                 </AlertDialogContent>
               </AlertDialog>
@@ -496,7 +619,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
-
-    
