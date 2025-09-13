@@ -443,6 +443,9 @@ export default function Home() {
                             <Button onClick={() => navigator.clipboard.writeText(paymentData.qr_code)}>
                                 Copiar código
                             </Button>
+                             <p className="text-sm font-semibold text-center mt-2">
+                                Quando efetuar o pagamento você receberá acesso por e-mail automaticamente.
+                            </p>
                         </div>
                          <p className="text-xs text-center text-muted-foreground px-4">
                             A PUSHIN PAY atua exclusivamente como processadora de pagamentos e não possui qualquer responsabilidade pela entrega, suporte, conteúdo, qualidade ou cumprimento das obrigações relacionadas aos produtos ou serviços oferecidos pelo vendedor.
@@ -493,3 +496,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
