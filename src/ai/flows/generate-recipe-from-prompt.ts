@@ -7,8 +7,8 @@
  * - GenerateRecipeOutput - The return type for the generateRecipe function.
  */
 
-import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import { ai } from '@/ai/genkit';
+import { z } from 'genkit';
 
 const GenerateRecipeInputSchema = z.object({
   prompt: z.string().describe('A description of the desired recipe.'),
@@ -30,10 +30,10 @@ export async function generateRecipe(input: GenerateRecipeInput): Promise<Genera
 
 const recipePrompt = ai.definePrompt({
   name: 'recipePrompt',
-  input: {schema: GenerateRecipeInputSchema},
-  output: {schema: GenerateRecipeOutputSchema},
+  input: { schema: GenerateRecipeInputSchema },
+  output: { schema: GenerateRecipeOutputSchema },
   prompt: `You are a world-class chef specializing in creating delicious and easy-to-follow recipes. All responses must be in Portuguese.
-
+  If you receive irrelevant prompts or nonsensical questions, kindly redirect the user by asking them to share information about food, ingredients, or recipes instead
   Based on the user's request, generate a detailed recipe including:
 
   - A creative and appealing recipe name.
@@ -52,7 +52,7 @@ const generateRecipeFlow = ai.defineFlow(
     outputSchema: GenerateRecipeOutputSchema,
   },
   async input => {
-    const {output} = await recipePrompt(input);
+    const { output } = await recipePrompt(input);
     return output!;
   }
 );

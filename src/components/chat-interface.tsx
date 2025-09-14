@@ -124,30 +124,30 @@ export function ChatInterface() {
             {messages.map((message) => (
               <div
                 key={message.id}
-                className={cn('flex items-start gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300', {
-                  'justify-end flex-row-reverse': message.role === 'user',
+                className={cn('flex items-center gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300', {
+                  'justify-start  flex-row-reverse text-wrap': message.role === 'user',
                 })}
               >
-                <Avatar className="w-8 h-8 border">
+                <Avatar className="w-8 h-8 border-none flex items-center justify-center">
                   <AvatarFallback className={cn(message.isError ? 'bg-destructive text-destructive-foreground' : 'bg-secondary')}>
                     {message.role === 'assistant' ? <ChefHat className="w-5 h-5" /> : <User className="w-5 h-5" />}
                   </AvatarFallback>
                 </Avatar>
                 <div
                   className={cn(
-                    'p-3 rounded-lg max-w-sm md:max-w-md lg:max-w-lg',
+                    `p-3 rounded-lg lg:max-w-lg'}`,
                     {
-                      'bg-primary/20': message.role === 'user' && message.content,
+                      'bg-primary/20 ': message.role === 'user' && message.content,
                       'bg-muted': message.role === 'assistant' && message.content,
-                      'bg-destructive/20 text-destructive-foreground': message.isError,
-                      'p-0': !!message.recipe, // No padding if it's a recipe card
+                      'bg-destructive/20 text-destructive-foreground text-black': message.isError,
+                      'p-0': !!message.recipe, 
                     }
                   )}
                 >
                   {message.recipe ? (
                     <RecipeCard recipe={message.recipe} />
                   ) : (
-                    <p className="text-sm md:text-base whitespace-pre-wrap">{message.content}</p>
+                    <p className="text-sm  md:text-base whitespace-pre-wrap text-wrap">{message.content}</p>
                   )}
                 </div>
               </div>

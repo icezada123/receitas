@@ -42,7 +42,7 @@ const createPaymentFlow = ai.defineFlow(
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                value: 199, // R$ 1,99 em centavos
+                value: 499, 
                 webhook_url: webhookUrl,
             }),
         });
