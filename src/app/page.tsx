@@ -311,20 +311,20 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col min-h-svh bg-background">
-      <header className="py-12  sm:py-16 lg:py-20 bg-card/50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl  md:text-5xl lg:text-6xl font-bold font-headline text-foreground tracking-tight">
+    <div className="flex flex-col min-h-svh">
+      <header className="py-12 sm:py-16 lg:py-20 ">
+        <div className="container backdrop-blur-sm rounded-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-headline text-foreground tracking-tight leading-snug sm:leading-normal md:leading-relaxed">
             Transforme sua cozinha em um
-            <br />
+            <br className="hidden sm:block" />
             restaurante sem limites:{" "}
             <span className="text-green-600">8.000 receitas</span>
-            <br />+ a única <span className="text-blue-500">IA</span> que cria
-            qualquer prato
-            <br />
+            <br className="hidden sm:block" />+ a única{" "}
+            <span className="text-blue-500">IA</span> que cria qualquer prato
+            <br className="hidden sm:block" />
             que você imaginar <span className="text-primary">em segundos.</span>
           </h1>
-          <p className="mt-6 max-w-3xl mx-auto text-lg md:text-xl text-muted-foreground">
+          <p className="mt-4 sm:mt-6 max-w-full sm:max-w-3xl mx-auto text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed sm:leading-loose">
             Enquanto milhões ainda sofrem pensando no que cozinhar, você terá{" "}
             <span className="text-green-600 font-semibold">
               variedade infinita
@@ -334,7 +334,7 @@ export default function Home() {
             e o poder de decidir cada refeição – com{" "}
             <span className="text-blue-500 font-semibold">um clique</span>.
           </p>
-          <div className="mt-8">
+          <div className="mt-6 sm:mt-8">
             <Button
               size="lg"
               className="text-lg h-14 px-10 font-bold bg-orange-500 hover:bg-orange-600 text-white"
@@ -346,7 +346,7 @@ export default function Home() {
         </div>
       </header>
 
-      <section className="py-12 sm:py-16 lg:py-20">
+      <section className="py-12 sm:py-16 lg:py-20 backdrop-blur-sm ">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-red-500">
@@ -357,20 +357,20 @@ export default function Home() {
           <div className="mt-8 max-w-2xl mx-auto space-y-4">
             <div className="flex items-start gap-3">
               <X className="w-6 h-6 text-red-500 mt-1 shrink-0" />
-              <p className="text-lg text-muted-foreground">
+              <p className="text-lg text-black font-medium">
                 Delivery cada vez mais caro... e cada vez menos saudável.
               </p>
             </div>
             <div className="flex items-start gap-3">
               <X className="w-6 h-6 text-red-500 mt-1 shrink-0" />
-              <p className="text-lg text-muted-foreground">
+              <p className="text-lg text-black font-medium">
                 Frustração diária de abrir a geladeira e não saber o que
                 preparar.
               </p>
             </div>
             <div className="flex items-start gap-3">
               <X className="w-6 h-6 text-red-500 mt-1 shrink-0" />
-              <p className="text-lg text-muted-foreground">
+              <p className="text-lg text-black font-medium">
                 Sempre a mesma comida repetida, sem graça e sem vontade de
                 comer.
               </p>
@@ -378,22 +378,34 @@ export default function Home() {
           </div>
 
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <div className="border-2 border-red-500 rounded-lg p-6">
+            <div className="bg-white/60 backdrop-blur-sm border-2 border-red-500 rounded-lg p-6">
               <div className="flex items-center gap-3">
                 <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center">
                   <span className="text-white font-bold text-sm"></span>
                 </div>
                 <h3 className="text-2xl font-bold text-red-500">Antes</h3>
               </div>
-              <ul className="mt-6 space-y-3 text-lg text-muted-foreground">
-                <li>Rotina sem graça.</li>
-                <li>Tempo perdido.</li>
-                <li>Dinheiro indo embora.</li>
-                <li>Saúde deixada de lado.</li>
+              <ul className="mt-6 space-y-3 text-lg text-muted-foreground ">
+                <li className="flex items-center gap-5">
+                  <X className="w-6 h-6 text-red-500 mt-1 shrink-0" /> Rotina
+                  sem graça.
+                </li>
+                <li className="flex items-center gap-5">
+                  <X className="w-6 h-6 text-red-500 mt-1 shrink-0" /> Tempo
+                  perdido.
+                </li>
+                <li className="flex items-center gap-5">
+                  <X className="w-6 h-6 text-red-500 mt-1 shrink-0" /> Dinheiro
+                  indo embora.
+                </li>
+                <li className="flex items-center gap-5">
+                  <X className="w-6 h-6 text-red-500 mt-1 shrink-0" />
+                  Saúde deixada de lado.
+                </li>
               </ul>
             </div>
 
-            <div className="border-2 border-green-500 rounded-lg p-6">
+            <div className="bg-white/60 backdrop-blur-sm  border-2 border-green-500 rounded-lg p-6">
               <div className="flex items-center gap-3">
                 <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
                   <span className="text-white font-bold text-sm"></span>
@@ -444,18 +456,18 @@ export default function Home() {
         </div>
       </section>
 
-      <main className="w-full flex-1 flex flex-col mx-auto py-16 px-4 sm:px-6 lg:px-8 bg-card/50">
+      <main className="w-full flex-1 flex flex-col mx-auto py-16 px-4 sm:px-6 lg:px-8 ">
         <div className="text-center mb-8 max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground">
             Teste nossa IA de graça
           </h2>
         </div>
-        <div className="max-w-3xl mx-auto w-full">
+        <div className="max-w-3xl mx-auto w-full h-full ">
           <ChatInterface />
         </div>
       </main>
 
-      <section className="py-12 sm:py-16 lg:py-20 bg-card/50">
+      <section className="py-12 sm:py-16 lg:py-20 ">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-red-500 mb-12">
@@ -524,7 +536,10 @@ export default function Home() {
           </div>
           <div className="max-w-3xl mx-auto space-y-10">
             {benefits.map((benefit, index) => (
-              <div key={index} className="flex flex-col gap-3">
+              <div
+                key={index}
+                className="flex flex-col gap-3 bg-white/65 backdrop-blur-sm p-6 rounded-md"
+              >
                 <h3 className="flex items-center gap-2 text-xl font-bold text-green-600">
                   <Check className="w-7 h-7 bg-green-600 text-white rounded p-1" />
                   {benefit.title}
@@ -543,7 +558,7 @@ export default function Home() {
 
       <section id="main-cta-section" className="py-12 sm:py-16 lg:py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto border-2 border-green-500 rounded-lg p-8">
+          <div className="bg-white/50 backdrop-blur-sm max-w-4xl mx-auto border-2 border-green-500 rounded-lg p-8">
             <div className="text-center">
               <h2 className="text-3xl md:text-4xl font-bold text-red-500">
                 A sua transformação começa hoje
@@ -829,10 +844,9 @@ export default function Home() {
               ))}
             </Accordion>
           </div>
-          
 
           <p className="text-center mt-8 gap-5 text-muted-foreground">
-            Ainda tem dúvidas? 
+            Ainda tem dúvidas?
             <a
               href="https://api.whatsapp.com/send/?phone=556282042321"
               target="_blank"
@@ -841,7 +855,6 @@ export default function Home() {
               Clique aqui e fale conosco agora mesmo.
             </a>
           </p>
-          
         </div>
       </section>
 

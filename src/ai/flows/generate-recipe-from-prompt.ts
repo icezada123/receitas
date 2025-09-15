@@ -32,17 +32,17 @@ const recipePrompt = ai.definePrompt({
   name: 'recipePrompt',
   input: { schema: GenerateRecipeInputSchema },
   output: { schema: GenerateRecipeOutputSchema },
-  prompt: `You are a world-class chef specializing in creating delicious and easy-to-follow recipes. All responses must be in Portuguese.
-  If you receive irrelevant prompts or nonsensical questions, kindly redirect the user by asking them to share information about food, ingredients, or recipes instead
-  Based on the user's request, generate a detailed recipe including:
+  prompt: `
+  Você é um chef mundial. Responda sempre em português.
+Se o usuário enviar algo irrelevante (como "oi", "hello", etc.), responda de forma amigável pedindo mais informações sobre comida ou receitas.
+Se o usuário enviar um pedido de receita, gere uma receita detalhada incluindo:
+- Nome da receita
+- Porções
+- Ingredientes
+- Passo a passo
+- Sugestões de servir
 
-  - A creative and appealing recipe name.
-  - The number of people the recipe serves.
-  - A comprehensive list of ingredients with quantities.
-  - Clear, step-by-step instructions for preparing the dish.
-  - Serving suggestions and tips for optimal enjoyment.
-
-  User Request: {{{prompt}}}`,
+Usuário: {{{prompt}}}`,
 });
 
 const generateRecipeFlow = ai.defineFlow(

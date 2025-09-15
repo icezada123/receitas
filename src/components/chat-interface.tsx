@@ -117,7 +117,7 @@ export function ChatInterface() {
   };
 
   return (
-    <Card className="w-full h-full flex flex-col shadow-lg rounded-xl flex-1">
+    <Card className="w-full min-h-[370px] flex flex-col shadow-lg rounded-xl flex-1">
       <CardContent className="flex flex-col flex-1 p-0">
         <ScrollArea className="flex-1" ref={scrollAreaRef}>
           <div className="p-6 space-y-6">
@@ -185,8 +185,8 @@ export function ChatInterface() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" size="icon" disabled={isPending}>
-                {isPending ? <LoaderCircle className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
+              <Button type="submit" className='bg-green-500 flex items-center justify-center' size="icon" disabled={isPending}>
+                {isPending ? <LoaderCircle className=" w-5 h-5 animate-spin" /> : <Send color='black' className=" w-5 h-5" />}
                 <span className="sr-only">Enviar</span>
               </Button>
             </form>

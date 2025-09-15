@@ -13,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="pt-br" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -26,7 +26,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="font-body antialiased">
+<body className="font-body antialiased bg-[url('/assets/planoFundo2.png')] bg-repeat-y bg-top bg-contain bg-gray-900/70 bg-blend-overlay">
         {children}
         <Toaster />
       </body>
