@@ -311,10 +311,17 @@ export default function Home() {
   };
 
   return (
+
+
+    
+
     <div className="flex flex-col min-h-svh">
-      <header className="py-12 sm:py-16 lg:py-20 ">
-        <div className="container backdrop-blur-sm rounded-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-headline text-foreground tracking-tight leading-snug sm:leading-normal md:leading-relaxed">
+      <div className="absolute blur-sm rounded-3xl top-0 left-0 w-full h-full z-[-1] overflow-hidden">
+        <img className="w-full"  src="/assets/fundopt1.png" alt="" />
+      </div>
+      <header className="py-12 mt-20 sm:py-16 lg:py-20 ">
+        <div className="container  mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-3xl text-white sm:text-4xl md:text-5xl lg:text-6xl font-bold font-headline text-foreground tracking-tight leading-snug sm:leading-normal md:leading-relaxed">
             Transforme sua cozinha em um
             <br className="hidden sm:block" />
             restaurante sem limites:{" "}
@@ -324,7 +331,7 @@ export default function Home() {
             <br className="hidden sm:block" />
             que você imaginar <span className="text-primary">em segundos.</span>
           </h1>
-          <p className="mt-4 sm:mt-6 max-w-full sm:max-w-3xl mx-auto text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed sm:leading-loose">
+          <p className="mt-4 text-white sm:mt-6 max-w-full sm:max-w-3xl mx-auto text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed sm:leading-loose">
             Enquanto milhões ainda sofrem pensando no que cozinhar, você terá{" "}
             <span className="text-green-600 font-semibold">
               variedade infinita
