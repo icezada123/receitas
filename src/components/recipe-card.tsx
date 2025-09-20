@@ -89,9 +89,9 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
                 <Lock className="w-8 h-8 text-primary mb-4" />
                 <h3 className="text-lg font-bold mb-2">Libere a receita completa!</h3>
                 <p className="text-muted-foreground mb-4">
-                    Assine agora por apenas <span className="font-bold text-primary">R$ 1,99</span> e tenha acesso a esta e milhares de outras receitas ilimitadas.
+                    Assine agora por apenas <span className="font-bold text-primary">R$ 4,99</span> e tenha acesso a esta e milhares de outras receitas ilimitadas.
                 </p>
-                <Button onClick={scrollToMainCta}>Quero acesso ilimitado</Button>
+                <Button className='text-white' onClick={scrollToMainCta}>Quero acesso ilimitado</Button>
             </div>
         )}
     </div>
