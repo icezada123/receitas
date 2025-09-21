@@ -17,7 +17,6 @@ const CreatePaymentOutputSchema = z.object({
 export async function createPayment(): Promise<z.infer<typeof CreatePaymentOutputSchema> | null> {
     return createPaymentFlow();
 }
-
 const createPaymentFlow = ai.defineFlow(
     {
         name: 'createPaymentFlow',
@@ -33,7 +32,6 @@ const createPaymentFlow = ai.defineFlow(
         if (!webhookUrl) {
             throw new Error('Webhook URL is not configured.');
         }
-
         const response = await fetch('https://api.pushinpay.com.br/api/pix/cashIn', {
             method: 'POST',
             headers: {
