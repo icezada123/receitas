@@ -7,13 +7,11 @@ import { sendToDiscord as sendToDiscordFlow } from '@/ai/flows/send-to-discord';
 import type { Message } from '@/lib/types';
 
 const FREE_RECIPE_LIMIT = 2;
-
 function extractNumber(text: string): number | null {
   const match = text.match(/\d+([.,]\d+)?/);
   if (!match) return null;
   return parseFloat(match[0].replace(',', '.'));
 }
-
 function constructPrompt(dish: string, servings?: number | string): string {
   if (!dish || !dish.trim()) {
     throw new Error('O nome do prato não pode ser vazio.');

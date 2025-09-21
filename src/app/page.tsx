@@ -1,22 +1,15 @@
 "use client";
-
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-
 import { ChatInterface } from "@/components/chat-interface";
 import { Header } from "@/components/homePageComponents/Header";
 import { HeroSection } from "@/components/homePageComponents/heroSection";
 import { CarouselSection } from "@/components/homePageComponents/carouselSection";
-import { PaymentSection } from "@/components/homePageComponents/paymentSection";
-import { useNavigate } from "react-router-dom";
-
-
-
-
+import { PaymentSection } from "@/components/homePageComponents/paymentSection"
 const faqItems = [
   {
     question: "Preciso saber cozinhar para usar a plataforma?",
@@ -54,16 +47,13 @@ const faqItems = [
       "Sim! O acesso é individual, mas nada impede que toda a sua família aproveite as receitas e viva a transformação junto com você.",
   },
 ];
-
 const scrollToMainCta = () => {
   const ctaElement = document.getElementById("main-cta-section");
   if (ctaElement) {
     ctaElement.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 };
-
 export default function Home() {
-  
 
   return (
     <div className="flex flex-col min-h-svh">
