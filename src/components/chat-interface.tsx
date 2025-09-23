@@ -90,21 +90,25 @@ export function ChatInterface() {
       }
       
       let assistantMessage: Message;
-      if (recipe) {
-          assistantMessage = {
-              id: crypto.randomUUID(),
-              role: 'assistant',
-              content: '', // Content is handled by the RecipeCard
-              recipe: recipe,
-            };
-      } else if (response) {
+      // VERIFICA SE A RESPOSTA É UM TEXTO SIMPLES
+      if (response) {
         assistantMessage = {
             id: crypto.randomUUID(),
             role: 'assistant',
             content: response,
           };
-      } else {
-        // Should not happen, but as a fallback
+      } 
+      // SE NÃO FOR TEXTO SIMPLES, VERIFICA SE É UMA RECEITA VÁLIDA
+      else if (recipe && recipe.recipeName) {
+          assistantMessage = {
+              id: crypto.randomUUID(),
+              role: 'assistant',
+              content: '', // O conteúdo é tratado pelo RecipeCard
+              recipe: recipe,
+            };
+      } 
+      // FALLBACK PARA ERROS INESPERADOS
+      else {
         assistantMessage = {
           id: crypto.randomUUID(),
           role: 'assistant',
@@ -125,7 +129,7 @@ export function ChatInterface() {
               <div
                 key={message.id}
                 className={cn('flex items-center gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300', {
-                  'justify-start  flex-row-reverse text-wrap': message.role === 'user',
+                  'justify-start flex-row-reverse text-wrap': message.role === 'user',
                 })}
               >
                 <Avatar className="w-8 h-8 border-none flex items-center justify-center">
@@ -147,7 +151,7 @@ export function ChatInterface() {
                   {message.recipe ? (
                     <RecipeCard recipe={message.recipe} />
                   ) : (
-                    <p className="text-sm  md:text-base whitespace-pre-wrap text-wrap">{message.content}</p>
+                    <p className="text-sm md:text-base whitespace-pre-wrap text-wrap">{message.content}</p>
                   )}
                 </div>
               </div>
