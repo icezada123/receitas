@@ -16,26 +16,26 @@ function extractNumber(text: string): number | null {
   return parseFloat(match[0].replace(',', '.'));
 }
 export const getUser = async (token: string) => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/auth/validate`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          credentials: 'include'
-        }
-      )
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/auth/validate`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
 
-      if (!response.ok) {
-        return null;
       }
-      return response.json();
-    } catch (error) {
-      
+    )
+
+    if (!response.ok) {
+      return null;
     }
-}; 
+    return response.json();
+  } catch (error) {
+
+  }
+};
 
 
 function constructPrompt(message: string): string {
@@ -60,7 +60,8 @@ Usuário: "${message}"
 }
 
 export async function processUserMessage(
-  history: Message[]
+  history: Message[],
+  isPaid: boolean
 ): Promise<{ recipe?: any; response?: string; error?: string }> {
   try {
     const lastUserMessage = history.findLast(msg => msg.role === 'user');
@@ -70,7 +71,7 @@ export async function processUserMessage(
 
 
     const recipeCount = history.filter(msg => msg.role === 'assistant' && msg.recipe).length;
-    if (recipeCount >= FREE_RECIPE_LIMIT) {
+    if (recipeCount >= FREE_RECIPE_LIMIT && !isPaid) {
       return {
         response: 'Para continuar conversando e ter acesso ilimitado às receitas, assine o plano completo por apenas R$ 4,99!'
       };
@@ -79,11 +80,14 @@ export async function processUserMessage(
     const prompt = constructPrompt(lastUserMessage.content);
     const aiResponse = await generateRecipe({ prompt });
 
-    if (aiResponse) {
+    if (aiResponse.recipeName) {
+      return { recipe: aiResponse };
+    } else if (aiResponse.textResponse) {
       return { response: aiResponse.textResponse };
     } else {
-      return { recipe: aiResponse };
+      return { error: 'Desculpe, não consegui processar sua solicitação. Por favor, tente novamente.' };
     }
+
 
   } catch (error: any) {
     console.error('Error processing user message:', error);

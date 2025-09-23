@@ -71,7 +71,7 @@ export function ChatInterface() {
     form.reset();
 
     startTransition(async () => {
-      const { recipe, response, error } = await processUserMessage(newMessages);
+      const { recipe, response, error } = await processUserMessage(newMessages, false);
 
       if (error) {
         toast({
