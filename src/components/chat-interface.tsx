@@ -90,7 +90,7 @@ export function ChatInterface() {
       }
       
       let assistantMessage: Message;
-      // VERIFICA SE A RESPOSTA É UM TEXTO SIMPLES
+      
       if (response) {
         assistantMessage = {
             id: crypto.randomUUID(),
@@ -98,16 +98,16 @@ export function ChatInterface() {
             content: response,
           };
       } 
-      // SE NÃO FOR TEXTO SIMPLES, VERIFICA SE É UMA RECEITA VÁLIDA
+     
       else if (recipe && recipe.recipeName) {
           assistantMessage = {
               id: crypto.randomUUID(),
               role: 'assistant',
-              content: '', // O conteúdo é tratado pelo RecipeCard
+              content: '',
               recipe: recipe,
             };
       } 
-      // FALLBACK PARA ERROS INESPERADOS
+      
       else {
         assistantMessage = {
           id: crypto.randomUUID(),

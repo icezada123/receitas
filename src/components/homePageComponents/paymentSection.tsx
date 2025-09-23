@@ -141,6 +141,7 @@ export function PaymentSection() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ name, email, password  }),
+          credentials: 'include'
         }
       );
       if (!response.ok) {

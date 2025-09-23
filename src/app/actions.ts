@@ -24,6 +24,7 @@ export const getUser = async (token: string) => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          credentials: 'include'
         }
       )
 
