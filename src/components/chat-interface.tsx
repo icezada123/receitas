@@ -172,7 +172,7 @@ export function ChatInterface() {
         </ScrollArea>
         <div className="p-4 border-t bg-background/80 backdrop-blur-sm rounded-b-xl">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center gap-2">
+            <form onSubmit={ form.handleSubmit(onSubmit)} className="flex items-center gap-2">
               <FormField
                 control={form.control}
                 name="message"
