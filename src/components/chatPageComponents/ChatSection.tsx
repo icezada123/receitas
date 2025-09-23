@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
-import { RecipeCard } from "../recipe-card";
+import { RecipeCard } from "./RecipeCard";
 
 type Message = {
   id: string;
@@ -49,7 +49,7 @@ export function ChatSection() {
     setIsPending(true);
 
     try {
-      const result = await processUserMessage([...messages, userMessage]);
+      const result = await processUserMessage([...messages, userMessage], true);
 
       let aiMessage: Message;
 
