@@ -5,41 +5,57 @@ import { createPayment } from '@/ai/flows/create-payment';
 import { checkPaymentStatus as checkPaymentStatusFlow } from '@/ai/flows/check-payment-status';
 import { sendToDiscord as sendToDiscordFlow } from '@/ai/flows/send-to-discord';
 import type { Message } from '@/lib/types';
+import { parseCookies } from 'nookies';
 
 const FREE_RECIPE_LIMIT = 2;
+
+
 function extractNumber(text: string): number | null {
   const match = text.match(/\d+([.,]\d+)?/);
   if (!match) return null;
   return parseFloat(match[0].replace(',', '.'));
 }
-function constructPrompt(dish: string, servings?: number | string): string {
-  if (!dish || !dish.trim()) {
-    throw new Error('O nome do prato não pode ser vazio.');
+export const getUser = async (token: string) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/auth/validate`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      if (!response.ok) {
+        return null;
+      }
+      return response.json();
+    } catch (error) {
+      
+    }
+}; 
+
+
+function constructPrompt(message: string): string {
+  if (!message || !message.trim()) {
+    throw new Error('A mensagem não pode ser vazia.');
   }
+
   return `
 Você é um chef mundial e também conversa de forma amigável com o usuário.
 
 - Se o usuário enviar algo irrelevante, casual ou apenas cumprimentos (como "oi", "olá", "bom dia"), responda de forma natural e amigável, sem gerar uma receita, e incentive a continuar a conversa sobre comida.
 - Se o usuário enviar um pedido de receita ou prato, gere uma receita detalhada incluindo:
   - Nome criativo do prato
+  - Número de porções (se não for especificado, pode sugerir um número padrão)
   - Lista completa de ingredientes com quantidades
   - Passo a passo claro para o preparo
   - Sugestões de como servir e aproveitar melhor a receita
 - Sempre responda em português e de forma organizada.
 
-Usuário: "${dish}"
-${servings ? `Porções: ${servings}` : ''}
+Usuário: "${message}"
 `;
-}
-
-function isValidRecipe(recipe: any): recipe is { recipeName: string; ingredients: any; instructions: any; servings: number } {
-  return (
-    recipe &&
-    typeof recipe.recipeName === 'string' &&
-    Array.isArray(recipe.ingredients) &&
-    Array.isArray(recipe.instructions) &&
-    (typeof recipe.servings === 'number' || typeof recipe.servings === 'string')
-  );
 }
 
 export async function processUserMessage(
@@ -47,7 +63,10 @@ export async function processUserMessage(
 ): Promise<{ recipe?: any; response?: string; error?: string }> {
   try {
     const lastUserMessage = history.findLast(msg => msg.role === 'user');
-    if (!lastUserMessage) return { error: 'Nenhuma mensagem do usuário encontrada.' };
+    if (!lastUserMessage) {
+      return { error: 'Nenhuma mensagem do usuário encontrada.' };
+    }
+
 
     const recipeCount = history.filter(msg => msg.role === 'assistant' && msg.recipe).length;
     if (recipeCount >= FREE_RECIPE_LIMIT) {
@@ -56,34 +75,21 @@ export async function processUserMessage(
       };
     }
 
-    const lastAssistantMessage = history.findLast(msg => msg.role === 'assistant');
-    const servingsFromMessage = extractNumber(lastUserMessage.content);
+    const prompt = constructPrompt(lastUserMessage.content);
+    const aiResponse = await generateRecipe({ prompt });
 
-    let prompt: string;
-
-    // State 2: usuário respondeu a pergunta de porções
-    if (lastAssistantMessage?.awaitingServings && servingsFromMessage) {
-      const dishMessage = history
-        .filter(msg => msg.role === 'user' && msg.id !== lastUserMessage.id)
-        .map(msg => msg.content)
-        .join(' ');
-
-      prompt = constructPrompt(dishMessage, servingsFromMessage);
+    if (aiResponse) {
+      return { response: aiResponse.textResponse };
     } else {
-      prompt = constructPrompt(lastUserMessage.content, servingsFromMessage ?? undefined);
+      return { recipe: aiResponse };
     }
 
-    const recipe = await generateRecipe({ prompt });
-    // if (!isValidRecipe(recipe)) {
-    //   throw new Error('A resposta da IA não continha uma receita válida.');
-    // }
-
-    return { recipe };
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error processing user message:', error);
     return { error: 'Desculpe, não consegui processar sua solicitação. Por favor, tente novamente.' };
   }
 }
+
 
 export async function createPixPayment(): Promise<{ qr_code_base64: string; qr_code: string; transaction_id: string } | null> {
   try {
@@ -110,12 +116,3 @@ export async function checkPaymentStatus(transactionId: string): Promise<string 
   }
 }
 
-export async function sendToDiscord(message: string): Promise<void> {
-  try {
-    if (!message || !message.trim()) throw new Error('Mensagem para Discord é obrigatória.');
-    await sendToDiscordFlow(message);
-  } catch (error) {
-    console.error('Error sending message to Discord:', error);
-    throw new Error('Falha ao enviar mensagem para o Discord.');
-  }
-}

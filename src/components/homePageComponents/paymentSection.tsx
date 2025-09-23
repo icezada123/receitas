@@ -24,11 +24,11 @@ import Image from "next/image";
 import {
   checkPaymentStatus,
   createPixPayment,
-  sendToDiscord,
 } from "@/app/actions";
 import { useEffect, useRef, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { setCookie, parseCookies, destroyCookie } from "nookies";
+import { useRouter } from "next/navigation";
 
 const finalBenefits = [
   "+8.000 receitas deliciosas e naturais",
@@ -38,6 +38,7 @@ const finalBenefits = [
 ];
 
 export function PaymentSection() {
+  const router = useRouter();
   const [paymentData, setPaymentData] = useState<{
     qr_code_base64: string;
     qr_code: string;
@@ -152,7 +153,7 @@ export function PaymentSection() {
       });
 
       setSubmissionComplete(true);
-
+      router.push("/chat");
     } catch (error) {
       console.error("Erro ao enviar para o servidor:", error);
       alert("Ocorreu um erro ao enviar seus dados. Tente novamente.");
@@ -258,11 +259,11 @@ export function PaymentSection() {
             </h3>
             <p className="mt-2 text-muted-foreground">
               Experimente por{" "}
-              <span className="text-red-500 font-bold text-lg">
+              <span className="text-green-800 font-bold text-lg">
                 7 dias sem compromisso
               </span>
               . Se não transformar sua rotina, devolvemos{" "}
-              <span className="text-red-500 font-bold text-lg">
+              <span className="text-green-800 font-bold text-lg">
                 100% do seu dinheiro
               </span>
               .
@@ -451,7 +452,7 @@ export function PaymentSection() {
                           <Input
                             id="password"
                             type="password"
-                            placeholder="****** ******"
+                            placeholder="**********"
                             value={password}
                             className="border border-black rounded-xl"
                             onChange={(e) => setPassword(e.target.value)}
@@ -501,6 +502,11 @@ export function PaymentSection() {
                 )}
               </AlertDialogContent>
             </AlertDialog>
+            <div className="mt-3">
+              <a onClick={()=> router.push("/login")} className="cursor-pointer underline text-sm text-orange-500 duration-500 hover:text-orange-800 text-center text-muted-foreground ">
+                Entrar com uma conta existente
+              </a>
+            </div>
           </div>
         </div>
       </div>

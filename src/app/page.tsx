@@ -100,16 +100,7 @@ export default function Home() {
             </Accordion>
           </div>
 
-          <p className="text-center mt-8 gap-5 text-muted-foreground">
-            Ainda tem dúvidas?
-            <a
-              href="https://api.whatsapp.com/send/?phone=556282042321"
-              target="_blank"
-              className="text-green-600 font-semibold underline"
-            >
-              Clique aqui e fale conosco agora mesmo.
-            </a>
-          </p>
+         
         </div>
       </section>
 
